@@ -4,11 +4,6 @@
     "slug": "it-takes-a-village",
     "version": "1.0.0",
     "scheme": "it-takes-a-village",
-    "web": {
-      "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/favicon.png"
-    },
     "plugins": [
       "expo-router",
       [
@@ -16,8 +11,7 @@
         {
           "launchMode": "most-recent"
         }
-      ],
-      "expo-web-browser"
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
@@ -25,7 +19,7 @@
     },
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -33,12 +27,23 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.benstokoe.ittakesavillage",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "package": "com.benstokoe.ittakesavillage"
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "8e618f34-55ef-4df7-83ee-73a61bc0aa37"
       }
     }
   }
