@@ -3,12 +3,11 @@ import { useForm } from 'react-hook-form';
 import { ActivityIndicator, View } from 'react-native';
 import * as z from 'zod';
 
+import { SafeAreaView } from '@/components/safe-area-view';
 import { Button } from '@/components/ui/button';
 import { Form, FormField, FormInput } from '@/components/ui/form';
 import { Text } from '@/components/ui/text';
-import { H1 } from '@/components/ui/typography';
 import { useAuth } from '@/utils/useAuth';
-import { SafeAreaView } from '@/components/safe-area-view';
 
 const formSchema = z
   .object({
@@ -53,7 +52,6 @@ export default function SignUp() {
   return (
     <SafeAreaView className="flex-1 bg-background p-4" edges={['top', 'bottom']}>
       <View className="flex-1 gap-4 web:m-4">
-        <H1 className="self-start">Sign Up</H1>
         <Form {...form}>
           <View className="gap-4">
             <FormField

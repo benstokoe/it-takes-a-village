@@ -4,10 +4,10 @@ import { NAV_THEME } from '@/lib/constants';
 import { useColorScheme } from '@/lib/useColorScheme';
 import { AuthProvider } from '@/utils/useAuth';
 import { DarkTheme, DefaultTheme, Theme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
+import { Stack, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
-import { Platform } from 'react-native';
+import { Platform, TouchableOpacity, Text } from 'react-native';
 
 const useIsomorphicLayoutEffect =
   Platform.OS === 'web' && typeof window === 'undefined' ? React.useEffect : React.useLayoutEffect;
@@ -56,6 +56,20 @@ export default function RootLayout() {
             name="sign-up"
             options={{
               presentation: 'modal',
+              headerShown: true,
+              title: 'Sign Up',
+              headerLeft: () => null,
+              headerRight: () => (
+                <TouchableOpacity onPress={() => router.back()}>
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      color: colorScheme === 'dark' ? NAV_THEME.dark.text : NAV_THEME.light.text,
+                    }}>
+                    ✕
+                  </Text>
+                </TouchableOpacity>
+              ),
               headerStyle: {
                 backgroundColor:
                   colorScheme === 'dark' ? NAV_THEME.dark.background : NAV_THEME.light.background,
@@ -68,6 +82,20 @@ export default function RootLayout() {
             name="sign-in"
             options={{
               presentation: 'modal',
+              headerShown: true,
+              title: 'Sign In',
+              headerLeft: () => null,
+              headerRight: () => (
+                <TouchableOpacity onPress={() => router.back()}>
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      color: colorScheme === 'dark' ? NAV_THEME.dark.text : NAV_THEME.light.text,
+                    }}>
+                    ✕
+                  </Text>
+                </TouchableOpacity>
+              ),
               headerStyle: {
                 backgroundColor:
                   colorScheme === 'dark' ? NAV_THEME.dark.background : NAV_THEME.light.background,
