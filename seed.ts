@@ -14,7 +14,7 @@ const main = async () => {
     models: {
       profiles: {
         data: {
-          avatar_url: ({ seed }) => faker.image.avatarGitHub(),
+          avatarUrl: ({ seed }) => faker.image.avatarGitHub(),
         },
       },
     },
@@ -86,12 +86,12 @@ const main = async () => {
       username: profile.username,
     })) ?? [];
 
-  await seed.availability_requests((x) => x(10), { connect: { profiles } });
-  await seed.availability_responses((x) => x(10), { connect: { profiles } });
-  await seed.group_members((x) => x(10), { connect: { profiles } });
+  await seed.availabilityRequests((x) => x(10), { connect: { profiles } });
+  await seed.availabilityResponses((x) => x(10), { connect: { profiles } });
+  await seed.groupMembers((x) => x(10), { connect: { profiles } });
   await seed.groups((x) => x(10), { connect: { profiles } });
-  await seed.request_messages((x) => x(10), { connect: { profiles } });
-  await seed.request_recipients((x) => x(10), { connect: { profiles } });
+  await seed.requestMessages((x) => x(10), { connect: { profiles } });
+  await seed.requestRecipients((x) => x(10), { connect: { profiles } });
 
   process.exit();
 };

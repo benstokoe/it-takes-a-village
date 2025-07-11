@@ -1,5 +1,12 @@
 import { AuthTokenResponsePassword } from '@supabase/supabase-js';
-import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
 import { Profile } from '@/database.types';
 import { Session, supabase } from '@/utils/supabase';
@@ -28,6 +35,7 @@ type SignUpProps = {
 
 type AuthContextType = {
   initialized: boolean;
+  profile: Profile | null;
   session: Session | null;
   signIn: (props: SignInProps) => Promise<void>;
   signUp: (props: SignUpProps) => Promise<void>;
@@ -42,7 +50,7 @@ const AuthContext = createContext<AuthContextType>({
   session: null,
   // token: undefined,
   // user: undefined,
-  // profile: undefined,
+  profile: null,
   signIn: () => new Promise(() => ({})),
   signUp: () => new Promise(() => ({})),
   signOut: () => Promise.resolve(),
@@ -66,23 +74,24 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [initialized, setInitialized] = useState(false);
   // const [token, setToken] = useState<AuthState['token']>(undefined);
   const [session, setSession] = useState<Session | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const router = useRouter();
 
-  // const fetchProfile = useCallback(async (userId: string) => {
-  //   try {
-  //     const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single();
+  const fetchProfile = useCallback(async (userId: string) => {
+    try {
+      const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single();
 
-  //     if (error) {
-  //       console.error('Error fetching profile:', error);
-  //       return null;
-  //     }
+      if (error) {
+        console.error('Error fetching profile:', error);
+        return null;
+      }
 
-  //     return data;
-  //   } catch (error) {
-  //     console.error('Error fetching profile:', error);
-  //     return null;
-  //   }
-  // }, []);
+      return data;
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+      return null;
+    }
+  }, []);
 
   useEffect(() => {
     // const {
@@ -114,16 +123,23 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       setSession(session);
     });
 
-    supabase.auth.onAuthStateChange((_event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
+
+      if (session?.user?.id) {
+        const userProfile = await fetchProfile(session.user.id);
+        setProfile(userProfile);
+      }
     });
 
     setInitialized(true);
 
-    // return () => {
-    //   subscription.unsubscribe();
-    // };
-  }, []);
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [fetchProfile]);
 
   useEffect(() => {
     if (initialized) {
@@ -232,7 +248,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         // isAuthenticated: !!token,
         // token,
         // user,
-        // profile,
+        profile,
         signIn,
         signUp,
         signOut,
@@ -243,3 +259,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     </AuthContext.Provider>
   );
 };
+function fetchProfile(id: string) {
+  throw new Error('Function not implemented.');
+}

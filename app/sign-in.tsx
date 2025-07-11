@@ -3,12 +3,11 @@ import { useForm } from 'react-hook-form';
 import { ActivityIndicator, View } from 'react-native';
 import * as z from 'zod';
 
-import { SafeAreaView } from '@/components/safe-area-view';
 import { Button } from '@/components/ui/button';
 import { Form, FormField, FormInput } from '@/components/ui/form';
-import { Text } from '@/components/ui/text';
 import { useAuth } from '@/utils/useAuth';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { SPACING } from '@/theme/globals';
 const formSchema = z.object({
   email: z.string().email('Please enter a valid email address.'),
   password: z
@@ -38,9 +37,21 @@ export default function SignIn() {
     }
   }
 
+  async function loginWithPete() {
+    try {
+      await signIn({ email: 'pete.kassulke82520@fox-min.com', password: 'testuser' });
+
+      form.reset();
+    } catch (error: Error | any) {
+      console.error(error.message);
+    }
+  }
+
   return (
-    <SafeAreaView className="flex-1 bg-background p-4" edges={['top', 'bottom']}>
-      <View className="flex-1 gap-4 web:m-4">
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: 'background', padding: SPACING[1] }}
+      edges={['top', 'bottom']}>
+      <View className="web:m-4 flex-1 gap-4">
         <Form {...form}>
           <View className="gap-4">
             <FormField
@@ -75,14 +86,26 @@ export default function SignIn() {
           </View>
         </Form>
       </View>
-      <Button
-        size="default"
-        variant="default"
-        onPress={form.handleSubmit(onSubmit)}
-        disabled={form.formState.isSubmitting}
-        className="web:m-4">
-        {form.formState.isSubmitting ? <ActivityIndicator size="small" /> : <Text>Sign In</Text>}
-      </Button>
+
+      <View className="flex flex-col gap-4">
+        <Button
+          size="default"
+          variant="default"
+          onPress={form.handleSubmit(onSubmit)}
+          disabled={form.formState.isSubmitting}
+          className="web:m-4">
+          {form.formState.isSubmitting ? <ActivityIndicator size="small" /> : 'Sign In'}
+        </Button>
+
+        <Button
+          size="default"
+          variant="default"
+          onPress={loginWithPete}
+          disabled={form.formState.isSubmitting}
+          className="web:m-4">
+          Login with Pete
+        </Button>
+      </View>
     </SafeAreaView>
   );
 }

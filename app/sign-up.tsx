@@ -3,11 +3,11 @@ import { useForm } from 'react-hook-form';
 import { ActivityIndicator, View } from 'react-native';
 import * as z from 'zod';
 
-import { SafeAreaView } from '@/components/safe-area-view';
 import { Button } from '@/components/ui/button';
 import { Form, FormField, FormInput } from '@/components/ui/form';
 import { Text } from '@/components/ui/text';
 import { useAuth } from '@/utils/useAuth';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const formSchema = z
   .object({

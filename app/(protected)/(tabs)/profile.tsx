@@ -2,11 +2,12 @@ import { Stack } from 'expo-router';
 import { View } from 'react-native';
 import { Container } from '@/components/Container';
 import { Text } from '@/components/ui/text';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { ModeToggle } from '@/components/ui/mode-toggle';
+import { Button } from '@/components/ui/button';
 import { useAuth } from '@/utils/useAuth';
 
 export default function Profile() {
-  const { session } = useAuth();
+  const { session, signOut } = useAuth();
   const user = session?.user;
 
   return (
@@ -37,7 +38,13 @@ export default function Profile() {
 
           <View className="border-t border-border pt-6">
             <Text className="mb-4 text-lg font-semibold">Appearance</Text>
-            <ThemeToggle />
+            <ModeToggle />
+          </View>
+
+          <View className="border-t border-border pt-6">
+            <Button variant="destructive" onPress={signOut}>
+              <Text>Sign Out</Text>
+            </Button>
           </View>
         </View>
       </Container>

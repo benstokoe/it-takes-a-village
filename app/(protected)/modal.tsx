@@ -1,12 +1,15 @@
 import { View } from 'react-native';
-
-import { H1, Muted } from '@/components/ui/typography';
+import { Text } from '@/components/ui/text';
 
 export default function Modal() {
   return (
-    <View className="flex flex-1 items-center justify-center gap-y-4 bg-background p-4">
-      <H1 className="text-center">Modal</H1>
-      <Muted className="text-center">This is a modal screen.</Muted>
+    <View className="bg-background flex flex-1 items-center justify-center gap-y-4 p-4">
+      <Text variant="heading" style={{ textAlign: 'center' }}>
+        Modal
+      </Text>
+      <Text variant="body" style={{ textAlign: 'center' }}>
+        This is a modal screen.
+      </Text>
     </View>
   );
 }

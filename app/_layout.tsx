@@ -1,25 +1,14 @@
-import '@/global.css';
-
-import { NAV_THEME } from '@/lib/constants';
-import { useColorScheme } from '@/lib/useColorScheme';
+import { useColorScheme } from '@/hooks/useColorScheme';
 import { AuthProvider } from '@/utils/useAuth';
-import { DarkTheme, DefaultTheme, Theme, ThemeProvider } from '@react-navigation/native';
 import { Stack, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { Platform, TouchableOpacity, Text } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { ThemeProvider } from '@/theme/theme-provider';
 
 const useIsomorphicLayoutEffect =
   Platform.OS === 'web' && typeof window === 'undefined' ? React.useEffect : React.useLayoutEffect;
-
-const LIGHT_THEME: Theme = {
-  ...DefaultTheme,
-  colors: NAV_THEME.light,
-};
-const DARK_THEME: Theme = {
-  ...DarkTheme,
-  colors: NAV_THEME.dark,
-};
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -28,7 +17,7 @@ export {
 
 export default function RootLayout() {
   const hasMounted = React.useRef(false);
-  const { colorScheme, isDarkColorScheme } = useColorScheme();
+  const colorScheme = useColorScheme();
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
 
   useIsomorphicLayoutEffect(() => {
@@ -45,67 +34,68 @@ export default function RootLayout() {
   }
 
   return (
-    <AuthProvider>
-      <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-        <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <AuthProvider>
+        <ThemeProvider>
+          <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
 
-        <Stack screenOptions={{ headerShown: false, gestureEnabled: false }}>
-          <Stack.Screen name="(protected)" />
-          <Stack.Screen name="welcome" />
-          <Stack.Screen
-            name="sign-up"
-            options={{
-              presentation: 'modal',
-              headerShown: true,
-              title: 'Sign Up',
-              headerLeft: () => null,
-              headerRight: () => (
-                <TouchableOpacity onPress={() => router.back()}>
-                  <Text
-                    style={{
-                      fontSize: 18,
-                      color: colorScheme === 'dark' ? NAV_THEME.dark.text : NAV_THEME.light.text,
-                    }}>
-                    ✕
-                  </Text>
-                </TouchableOpacity>
-              ),
-              headerStyle: {
-                backgroundColor:
-                  colorScheme === 'dark' ? NAV_THEME.dark.background : NAV_THEME.light.background,
-              },
-              headerTintColor: colorScheme === 'dark' ? NAV_THEME.dark.text : NAV_THEME.light.text,
-              gestureEnabled: true,
-            }}
-          />
-          <Stack.Screen
-            name="sign-in"
-            options={{
-              presentation: 'modal',
-              headerShown: true,
-              title: 'Sign In',
-              headerLeft: () => null,
-              headerRight: () => (
-                <TouchableOpacity onPress={() => router.back()}>
-                  <Text
-                    style={{
-                      fontSize: 18,
-                      color: colorScheme === 'dark' ? NAV_THEME.dark.text : NAV_THEME.light.text,
-                    }}>
-                    ✕
-                  </Text>
-                </TouchableOpacity>
-              ),
-              headerStyle: {
-                backgroundColor:
-                  colorScheme === 'dark' ? NAV_THEME.dark.background : NAV_THEME.light.background,
-              },
-              headerTintColor: colorScheme === 'dark' ? NAV_THEME.dark.text : NAV_THEME.light.text,
-              gestureEnabled: true,
-            }}
-          />
-        </Stack>
-      </ThemeProvider>
-    </AuthProvider>
+          <Stack screenOptions={{ headerShown: false, gestureEnabled: false }}>
+            <Stack.Screen name="(protected)" />
+            <Stack.Screen name="welcome" />
+            <Stack.Screen
+              name="sign-up"
+              options={{
+                presentation: 'modal',
+                headerShown: true,
+                title: 'Sign Up',
+                headerLeft: () => null,
+                headerRight: () => (
+                  <TouchableOpacity onPress={() => router.back()}>
+                    <Text
+                      style={{
+                        fontSize: 18,
+                      }}>
+                      ✕
+                    </Text>
+                  </TouchableOpacity>
+                ),
+                // headerStyle: {
+                //   backgroundColor:
+                //     colorScheme === 'dark' ? NAV_THEME.dark.background : NAV_THEME.light.background,
+                // },
+                // headerTintColor: colorScheme === 'dark' ? NAV_THEME.dark.text : NAV_THEME.light.text,
+                gestureEnabled: true,
+              }}
+            />
+            <Stack.Screen
+              name="sign-in"
+              options={{
+                presentation: 'modal',
+                headerShown: true,
+                title: 'Sign In',
+                headerLeft: () => null,
+                headerRight: () => (
+                  <TouchableOpacity onPress={() => router.back()}>
+                    <Text
+                      style={{
+                        fontSize: 18,
+                        // color: colorScheme === 'dark' ? NAV_THEME.dark.text : NAV_THEME.light.text,
+                      }}>
+                      ✕
+                    </Text>
+                  </TouchableOpacity>
+                ),
+                // headerStyle: {
+                //   backgroundColor:
+                //     colorScheme === 'dark' ? NAV_THEME.dark.background : NAV_THEME.light.background,
+                // },
+                // headerTintColor: colorScheme === 'dark' ? NAV_THEME.dark.text : NAV_THEME.light.text,
+                gestureEnabled: true,
+              }}
+            />
+          </Stack>
+        </ThemeProvider>
+      </AuthProvider>
+    </GestureHandlerRootView>
   );
 }

@@ -1,18 +1,23 @@
 import { Stack } from 'expo-router';
-import { View, Alert } from 'react-native';
+import { View, Alert, StyleSheet } from 'react-native';
 
 import { Container } from '@/components/Container';
 import { Text } from '@/components/ui/text';
 import { CreateGroupForm } from '@/components/CreateGroupForm';
 import { GroupsList } from '@/components/GroupsList';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { useAuth } from '@/utils/useAuth';
 import { useGroups } from '@/utils/useGroups';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui';
+import { SPACING } from '@/theme/globals';
+import { useTheme } from '@react-navigation/native';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Home() {
-  const { session } = useAuth();
-  const user = session?.user;
+  const { profile } = useAuth();
   const { groups, isLoading, error, createGroup } = useGroups();
+  const { colors } = useTheme();
+  const red = useThemeColor({}, 'red');
 
   const handleCreateGroup = async (name: string, description?: string) => {
     const newGroup = await createGroup(name, description);
@@ -24,35 +29,53 @@ export default function Home() {
     }
   };
 
+  const styles = StyleSheet.create({
+    error: {
+      color: red,
+    },
+    container: {
+      flex: 1,
+      padding: SPACING[4],
+      backgroundColor: colors.background,
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: SPACING[4],
+      gap: SPACING[2],
+    },
+  });
+
   if (error) {
     return (
       <>
         <Stack.Screen options={{ title: 'Home' }} />
         <Container>
-          <Text className="text-red-600">Error loading groups: {error}</Text>
+          <Text style={styles.error}>Error loading groups: {error}</Text>
         </Container>
       </>
     );
   }
 
+  console.log(profile);
+
   return (
     <>
-      <Stack.Screen options={{ title: 'Home' }} />
-      <Container>
-        <View className="mb-4 flex-row items-center justify-between">
-          <Text className="flex-1 text-2xl font-bold">
-            Welcome back
-            {user?.user_metadata?.full_name
-              ? `, ${user.user_metadata.full_name.split(' ')[0]}`
-              : ''}
-            !
+      <SafeAreaView style={{ padding: SPACING[4] }}>
+        <View style={styles.header}>
+          <Avatar>
+            <AvatarImage source={{ uri: profile?.avatar_url ?? '' }} />
+            <AvatarFallback>{profile?.full_name?.split(' ')[0].split('')[0]}</AvatarFallback>
+          </Avatar>
+
+          <Text variant="title">
+            Welcome back{profile?.full_name ? `, ${profile.full_name.split(' ')[0]}` : ''}!
           </Text>
-          <ThemeToggle />
         </View>
 
         {groups.length === 0 && !isLoading ? (
-          <View className="mt-6">
-            <Text className="mb-6 text-gray-600 dark:text-gray-300">
+          <View style={{ marginTop: SPACING[4] }}>
+            <Text>
               You&rsquo;re not part of any villages yet. Create your first village to start
               coordinating with family and friends!
             </Text>
@@ -60,13 +83,11 @@ export default function Home() {
           </View>
         ) : (
           <View>
-            <Text className="mb-4 text-gray-600 dark:text-gray-300">
-              Here&rsquo;s what&rsquo;s happening in your villages
-            </Text>
+            <Text>Here&rsquo;s what&rsquo;s happening in your villages</Text>
             <GroupsList groups={groups} isLoading={isLoading} />
           </View>
         )}
-      </Container>
+      </SafeAreaView>
     </>
   );
 }

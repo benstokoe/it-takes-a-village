@@ -11,11 +11,9 @@ import {
 import { View } from 'react-native';
 import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { RadioGroup } from '@/components/ui/radio-group';
-import { Switch } from '@/components/ui/switch';
-import { Textarea } from '@/components/ui/textarea';
-import { cn } from '@/lib/utils';
+// import { RadioGroup } from '@/components/ui/radio-group';
+// import { Switch } from '@/components/ui/switch';
+// import { Textarea } from '@/components/ui/textarea';
 import { Text } from './text';
 
 const Form = FormProvider;
@@ -86,23 +84,18 @@ const FormItem = React.forwardRef<
 });
 FormItem.displayName = 'FormItem';
 
-const FormLabel = React.forwardRef<
-  React.ComponentRef<typeof Label>,
-  Omit<React.ComponentPropsWithoutRef<typeof Label>, 'children'> & {
-    children: string;
-  }
->(({ className, nativeID: _nativeID, ...props }, ref) => {
-  const { error, formItemNativeID } = useFormField();
+function FormLabel({ children, ...props }: React.ComponentPropsWithoutRef<typeof Text>) {
+  // const { error } = useFormField();
+
+  // TODO: Add error state
 
   return (
-    <Label
-      ref={ref}
-      className={cn('native:pb-2 px-px pb-1', error && 'text-destructive', className)}
-      nativeID={formItemNativeID}
-      {...props}
-    />
+    <Text variant="body" numberOfLines={1} ellipsizeMode="tail" pointerEvents="none" {...props}>
+      {children}
+    </Text>
   );
-});
+}
+
 FormLabel.displayName = 'FormLabel';
 
 const FormDescription = React.forwardRef<
@@ -115,7 +108,7 @@ const FormDescription = React.forwardRef<
     <Text
       ref={ref}
       nativeID={formDescriptionNativeID}
-      className={cn('pt-1 text-sm text-muted-foreground', className)}
+      className={cn('text-muted-foreground pt-1 text-sm', className)}
       {...props}
     />
   );
@@ -139,7 +132,7 @@ const FormMessage = React.forwardRef<
       exiting={FadeOut.duration(275)}
       ref={ref}
       nativeID={formMessageNativeID}
-      className={cn('text-sm font-medium text-destructive', className)}
+      className={cn('text-destructive text-sm font-medium', className)}
       {...props}>
       {body}
     </Animated.Text>
@@ -191,7 +184,7 @@ const FormInput = React.forwardRef<
   }
 
   return (
-    <FormItem>
+    <FormItem className="gap-2">
       {!!label && (
         <FormLabel nativeID={formItemNativeID} onPress={handleOnLabelPress}>
           {label}

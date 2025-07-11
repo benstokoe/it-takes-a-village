@@ -3,6 +3,8 @@ import { Alert, ActivityIndicator } from 'react-native';
 import { Text } from '@/components/ui/text';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { View } from './ui';
+import { SPACING } from '@/theme/globals';
 
 type CreateGroupFormProps = {
   onGroupCreated: (name: string, description?: string) => Promise<void>;
@@ -40,8 +42,8 @@ export function CreateGroupForm({ onGroupCreated, isLoading = false }: CreateGro
   const disabled = isLoading || isSubmitting || !name.trim();
 
   return (
-    <>
-      <Text className="mb-4 text-lg font-semibold">Create Your First Village</Text>
+    <View style={{ display: 'flex', flexDirection: 'column', gap: SPACING[4] }}>
+      <Text variant="subtitle">Create Your First Village</Text>
 
       <Input
         placeholder="Group name (e.g., The Johnson Family)"
@@ -56,23 +58,16 @@ export function CreateGroupForm({ onGroupCreated, isLoading = false }: CreateGro
         placeholder="Description (optional)"
         value={description}
         onChangeText={setDescription}
+        type="textarea"
+        rows={3}
         className="mb-4"
-        multiline
-        numberOfLines={3}
         editable={!isSubmitting && !isLoading}
         maxLength={200}
       />
 
-      <Button onPress={handleSubmit} disabled={disabled}>
-        {isSubmitting || isLoading ? (
-          <>
-            <ActivityIndicator size="small" color="white" style={{ marginRight: 8 }} />
-            <Text>Creating...</Text>
-          </>
-        ) : (
-          <Text>Create Village</Text>
-        )}
+      <Button onPress={handleSubmit} disabled={disabled} loading={isSubmitting || isLoading}>
+        {isSubmitting || isLoading ? 'Creating...' : 'Create Village'}
       </Button>
-    </>
+    </View>
   );
 }

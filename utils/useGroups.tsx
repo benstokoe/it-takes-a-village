@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/utils/supabase';
-import { Group, GroupMember } from '@/database.types';
+import { Group, GroupMember, Profile } from '@/database.types';
 import { useAuth } from '@/utils/useAuth';
 
-type UserGroup = Group & {
-  group_members: GroupMember;
+export type UserGroup = Group & {
+  group_members: (GroupMember & {
+    profiles: Profile;
+  })[];
 };
 
 type UseGroupsReturn = {
@@ -32,6 +34,7 @@ export function useGroups(): UseGroupsReturn {
       setIsLoading(true);
       setError(null);
 
+      console.log('fetching groups');
       const { data, error: fetchError } = await supabase
         .from('groups')
         .select(
@@ -44,12 +47,20 @@ export function useGroups(): UseGroupsReturn {
             relationship_label,
             role,
             joined_at,
-            is_active
+            is_active,
+            profiles!inner(
+              id,
+              email,
+              full_name,
+              avatar_url
+            )
           )
         `
         )
         .eq('group_members.user_id', session.user.id)
         .eq('group_members.is_active', true);
+
+      console.log(data);
 
       if (fetchError) {
         throw fetchError;
