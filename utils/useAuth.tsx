@@ -8,7 +8,7 @@ import {
   useState,
 } from 'react';
 
-import { Profile } from '@/database.types';
+import { Profile } from '@/supabase/database.types';
 import { Session, supabase } from '@/utils/supabase';
 
 import { SplashScreen, useRouter } from 'expo-router';
@@ -79,14 +79,14 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
   const fetchProfile = useCallback(async (userId: string) => {
     try {
-      const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single();
-
-      if (error) {
-        console.error('Error fetching profile:', error);
-        return null;
-      }
-
-      return data;
+      // console.log('fetching profile', userId);
+      // const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single();
+      // console.log('profile data', data);
+      // if (error) {
+      //   console.error('Error fetching profile:', error);
+      //   return null;
+      // }
+      // return data;
     } catch (error) {
       console.error('Error fetching profile:', error);
       return null;
@@ -126,6 +126,8 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      setInitialized(true);
+
       setSession(session);
 
       if (session?.user?.id) {
@@ -133,8 +135,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         setProfile(userProfile);
       }
     });
-
-    setInitialized(true);
 
     return () => {
       subscription.unsubscribe();
@@ -205,6 +205,10 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   async function signOut() {
     const { error } = await supabase.auth.signOut();
 
+    setSession(null);
+    setProfile(null);
+    setInitialized(false);
+
     if (error) {
       console.error('Error signing out:', error);
       return;
@@ -259,6 +263,3 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     </AuthContext.Provider>
   );
 };
-function fetchProfile(id: string) {
-  throw new Error('Function not implemented.');
-}

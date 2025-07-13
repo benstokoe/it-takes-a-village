@@ -12,3 +12,5 @@ export * from './mode-toggle';
 
 export * from './image';
 export * from './avatar';
+
+export * from './alert';

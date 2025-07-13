@@ -6,7 +6,7 @@ import { Text } from '@/components/ui/text';
 import { CreateGroupForm } from '@/components/CreateGroupForm';
 import { GroupsList } from '@/components/GroupsList';
 import { useAuth } from '@/utils/useAuth';
-import { useGroups } from '@/utils/useGroups';
+import { useGroups } from '@/hooks/useGroups';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui';
 import { SPACING } from '@/theme/globals';
 import { useTheme } from '@react-navigation/native';
@@ -21,11 +21,9 @@ export default function Home() {
 
   const handleCreateGroup = async (name: string, description?: string) => {
     const newGroup = await createGroup(name, description);
+
     if (newGroup) {
-      Alert.alert(
-        'Success',
-        `${name} has been created! Share the invite code ${newGroup.invite_code} with your group members.`
-      );
+      Alert.alert('Success', `${name} has been created!`);
     }
   };
 
@@ -56,8 +54,6 @@ export default function Home() {
       </>
     );
   }
-
-  console.log(profile);
 
   return (
     <>

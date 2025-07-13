@@ -22,6 +22,14 @@ export default function WelcomeScreen() {
     }
   }
 
+  async function loginWithElody() {
+    try {
+      await signIn({ email: 'filiberto_walker71127@bleakcricket.org', password: 'testuser' });
+    } catch (error: Error | any) {
+      console.error(error.message);
+    }
+  }
+
   const styles = StyleSheet.create({
     container: {
       display: 'flex',
@@ -75,6 +83,9 @@ export default function WelcomeScreen() {
         </Button>
         <Button size="default" variant="default" onPress={loginWithBetsy}>
           Login with Betsy
+        </Button>
+        <Button size="default" variant="default" onPress={loginWithElody}>
+          Login with Elody
         </Button>
       </View>
     </SafeAreaView>

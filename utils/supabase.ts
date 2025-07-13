@@ -1,3 +1,4 @@
+import { Database } from '@/supabase/database.types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createClient } from '@supabase/supabase-js';
 import { AppState } from 'react-native';
@@ -15,6 +16,15 @@ export const supabase = createClient(supabaseUrl!, supabaseAnonKey!, {
 });
 
 export { type Session, type AuthError } from '@supabase/supabase-js';
+
+export type Profile = Database['public']['Tables']['profiles']['Row'];
+export type Group = Database['public']['Tables']['groups']['Row'];
+export type GroupMember = Database['public']['Tables']['group_members']['Row'];
+export type GroupInvitation = Database['public']['Tables']['group_invitations']['Row'];
+export type AvailabilityRequest = Database['public']['Tables']['availability_requests']['Row'];
+export type AvailabilityResponse = Database['public']['Tables']['availability_responses']['Row'];
+export type RequestMessage = Database['public']['Tables']['request_messages']['Row'];
+export type RequestRecipient = Database['public']['Tables']['request_recipients']['Row'];
 
 /**
  * Tells Supabase to autorefresh the session while the application

@@ -1,8 +1,9 @@
 import { Text } from '@/components/ui/text';
 import { SPACING } from '@/theme/globals';
-import { UserGroup } from '@/utils/useGroups';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { UserGroup } from '@/hooks/useGroups';
+import { Dimensions, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Avatar, AvatarFallback, AvatarImage, Carousel, CarouselItem } from './ui';
+import { useRouter } from 'expo-router';
 
 type GroupsListProps = {
   groups: UserGroup[];
@@ -12,6 +13,8 @@ type GroupsListProps = {
 const { width: screenWidth } = Dimensions.get('window');
 
 export function GroupsList({ groups, isLoading }: GroupsListProps) {
+  const router = useRouter();
+
   const styles = StyleSheet.create({
     container: {
       marginTop: SPACING[6],
@@ -20,7 +23,21 @@ export function GroupsList({ groups, isLoading }: GroupsListProps) {
       gap: SPACING[4],
     },
     cardList: {},
+    groupCard: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: SPACING[3],
+    },
   });
+
+  const handleGroupPress = (group: UserGroup) => {
+    router.push({
+      pathname: '/group-details',
+      params: {
+        groupId: group.id,
+      },
+    });
+  };
 
   if (isLoading) {
     return (
@@ -41,11 +58,14 @@ export function GroupsList({ groups, isLoading }: GroupsListProps) {
       <Carousel style={styles.cardList} itemWidth={screenWidth * 0.8} spacing={SPACING[4]}>
         {groups.map((group) => (
           <CarouselItem key={group.id}>
-            <View style={{ display: 'flex', flexDirection: 'column', gap: SPACING[3] }}>
+            <TouchableOpacity
+              style={styles.groupCard}
+              onPress={() => handleGroupPress(group)}
+              activeOpacity={0.8}>
               <Text variant="subtitle">{group.name}</Text>
               {group.description && <Text>{group.description}</Text>}
 
-              <View style={{ display: 'flex', flexDirection: 'row', gap: SPACING[3] }}>
+              <View style={{ display: 'flex', flexDirection: 'row', gap: SPACING[1] }}>
                 {group.group_members.map((member) => (
                   <Avatar key={member.id}>
                     <AvatarImage source={{ uri: member.profiles.avatar_url ?? '' }} />
@@ -55,10 +75,7 @@ export function GroupsList({ groups, isLoading }: GroupsListProps) {
                   </Avatar>
                 ))}
               </View>
-              {/* <Text className="mt-2 text-xs text-gray-500"> */}
-              {/* Role: {group.group_members.role === 'admin' ? 'Admin' : 'Member'} */}
-              {/* </Text> */}
-            </View>
+            </TouchableOpacity>
           </CarouselItem>
         ))}
       </Carousel>

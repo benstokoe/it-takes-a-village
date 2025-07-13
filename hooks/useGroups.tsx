@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
-import { supabase } from '@/utils/supabase';
-import { Group, GroupMember, Profile } from '@/database.types';
+import {
+  GroupInvitation,
+  supabase,
+  type Group,
+  type GroupMember,
+  type Profile,
+} from '@/utils/supabase';
 import { useAuth } from '@/utils/useAuth';
 
 export type UserGroup = Group & {
@@ -15,6 +20,8 @@ type UseGroupsReturn = {
   error: string | null;
   refetch: () => Promise<void>;
   createGroup: (name: string, description?: string) => Promise<Group | null>;
+  inviteToGroup: (groupId: string, name: string) => Promise<GroupInvitation | null>;
+  removeMemberFromGroup: (memberId: string, groupId: string) => Promise<boolean>;
 };
 
 export function useGroups(): UseGroupsReturn {
@@ -22,6 +29,8 @@ export function useGroups(): UseGroupsReturn {
   const [groups, setGroups] = useState<UserGroup[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  console.log('groups session', session);
 
   const fetchGroups = useCallback(async () => {
     if (!session?.user?.id) {
@@ -35,12 +44,31 @@ export function useGroups(): UseGroupsReturn {
       setError(null);
 
       console.log('fetching groups');
+      // First get groups where current user is a member
+      const { data: userGroups, error: userGroupsError } = await supabase
+        .from('group_members')
+        .select('group_id')
+        .eq('user_id', session.user.id)
+        .eq('is_active', true);
+
+      if (userGroupsError) {
+        throw userGroupsError;
+      }
+
+      if (!userGroups || userGroups.length === 0) {
+        setGroups([]);
+        return;
+      }
+
+      const groupIds = userGroups.map((ug) => ug.group_id);
+
+      // Then get all groups and their members for those groups
       const { data, error: fetchError } = await supabase
         .from('groups')
         .select(
           `
           *,
-          group_members!inner(
+          group_members(
             id,
             group_id,
             user_id,
@@ -48,7 +76,7 @@ export function useGroups(): UseGroupsReturn {
             role,
             joined_at,
             is_active,
-            profiles!inner(
+            profiles(
               id,
               email,
               full_name,
@@ -57,10 +85,8 @@ export function useGroups(): UseGroupsReturn {
           )
         `
         )
-        .eq('group_members.user_id', session.user.id)
+        .in('id', groupIds)
         .eq('group_members.is_active', true);
-
-      console.log(data);
 
       if (fetchError) {
         throw fetchError;
@@ -124,6 +150,59 @@ export function useGroups(): UseGroupsReturn {
     [session?.user?.id, fetchGroups]
   );
 
+  const inviteToGroup = useCallback(
+    async (groupId: string, name: string): Promise<GroupInvitation | null> => {
+      try {
+        const { data, error } = await supabase.rpc('group_invitations', {
+          group_id: groupId,
+          creator_id: session?.user?.id,
+          name,
+        });
+
+        console.log(data);
+
+        if (error) {
+          throw error;
+        }
+
+        return data;
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : 'Failed to invite to group';
+        setError(errorMessage);
+        console.error('Error inviting to group:', err);
+        return null;
+      }
+    },
+    [session?.user?.id]
+  );
+
+  const removeMemberFromGroup = useCallback(
+    async (memberId: string, groupId: string): Promise<boolean> => {
+      try {
+        const { error } = await supabase
+          .from('group_members')
+          .delete()
+          .eq('id', memberId)
+          .eq('group_id', groupId);
+
+        if (error) {
+          throw error;
+        }
+
+        // Refresh the groups list
+        await fetchGroups();
+        return true;
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : 'Failed to remove member from group';
+        setError(errorMessage);
+        console.error('Error removing member from group:', err);
+        return false;
+      }
+    },
+    [fetchGroups]
+  );
+
   useEffect(() => {
     fetchGroups();
   }, [fetchGroups]);
@@ -134,5 +213,7 @@ export function useGroups(): UseGroupsReturn {
     error,
     refetch: fetchGroups,
     createGroup,
+    inviteToGroup,
+    removeMemberFromGroup,
   };
 }

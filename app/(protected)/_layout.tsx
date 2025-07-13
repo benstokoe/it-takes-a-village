@@ -23,6 +23,7 @@ export default function ProtectedLayout() {
         headerShown: false,
       }}>
       <Stack.Screen name="(tabs)" />
+      <Stack.Screen name="group-details" />
       <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
     </Stack>
   );
