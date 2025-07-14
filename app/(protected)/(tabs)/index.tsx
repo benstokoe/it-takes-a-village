@@ -1,23 +1,17 @@
 import { Stack } from 'expo-router';
-import { View, Alert, StyleSheet } from 'react-native';
+import { Alert, View } from 'react-native';
 
-import { Container } from '@/components/Container';
-import { Text } from '@/components/ui/text';
 import { CreateGroupForm } from '@/components/CreateGroupForm';
 import { GroupsList } from '@/components/GroupsList';
-import { useAuth } from '@/utils/useAuth';
+import { Avatar, AvatarFallback, AvatarImage, Card } from '@/components/ui';
+import { Text } from '@/components/ui/text';
 import { useGroups } from '@/hooks/useGroups';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui';
-import { SPACING } from '@/theme/globals';
-import { useTheme } from '@react-navigation/native';
-import { useThemeColor } from '@/hooks/useThemeColor';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAuth } from '@/utils/useAuth';
+import { Container } from '@/components/container';
 
 export default function Home() {
   const { profile } = useAuth();
   const { groups, isLoading, error, createGroup } = useGroups();
-  const { colors } = useTheme();
-  const red = useThemeColor({}, 'red');
 
   const handleCreateGroup = async (name: string, description?: string) => {
     const newGroup = await createGroup(name, description);
@@ -27,29 +21,12 @@ export default function Home() {
     }
   };
 
-  const styles = StyleSheet.create({
-    error: {
-      color: red,
-    },
-    container: {
-      flex: 1,
-      padding: SPACING[4],
-      backgroundColor: colors.background,
-    },
-    header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginBottom: SPACING[4],
-      gap: SPACING[2],
-    },
-  });
-
   if (error) {
     return (
       <>
         <Stack.Screen options={{ title: 'Home' }} />
         <Container>
-          <Text style={styles.error}>Error loading groups: {error}</Text>
+          <Text className="text-red-500">Error loading groups: {error}</Text>
         </Container>
       </>
     );
@@ -57,8 +34,8 @@ export default function Home() {
 
   return (
     <>
-      <SafeAreaView style={{ padding: SPACING[4] }}>
-        <View style={styles.header}>
+      <Container>
+        <View className="flex-row items-center gap-2 mb-4">
           <Avatar>
             <AvatarImage source={{ uri: profile?.avatar_url ?? '' }} />
             <AvatarFallback>{profile?.full_name?.split(' ')[0].split('')[0]}</AvatarFallback>
@@ -69,8 +46,17 @@ export default function Home() {
           </Text>
         </View>
 
+        <View className="flex-col gap-4">
+          <Text variant="title">Upcoming Events</Text>
+          <View className="flex-row gap-2">
+            <Card>
+              <Text>Event 1</Text>
+            </Card>
+          </View>
+        </View>
+
         {groups.length === 0 && !isLoading ? (
-          <View style={{ marginTop: SPACING[4] }}>
+          <View className="mt-4">
             <Text>
               You&rsquo;re not part of any villages yet. Create your first village to start
               coordinating with family and friends!
@@ -78,12 +64,12 @@ export default function Home() {
             <CreateGroupForm onGroupCreated={handleCreateGroup} isLoading={isLoading} />
           </View>
         ) : (
-          <View>
+          <View className="flex-col gap-4">
             <Text>Here&rsquo;s what&rsquo;s happening in your villages</Text>
             <GroupsList groups={groups} isLoading={isLoading} />
           </View>
         )}
-      </SafeAreaView>
+      </Container>
     </>
   );
 }

@@ -4,7 +4,7 @@ import { Text } from '@/components/ui/text';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { View } from './ui';
-import { SPACING } from '@/theme/globals';
+import { spacing } from '@/theme/globals';
 
 type CreateGroupFormProps = {
   onGroupCreated: (name: string, description?: string) => Promise<void>;
@@ -42,7 +42,7 @@ export function CreateGroupForm({ onGroupCreated, isLoading = false }: CreateGro
   const disabled = isLoading || isSubmitting || !name.trim();
 
   return (
-    <View style={{ display: 'flex', flexDirection: 'column', gap: SPACING[4] }}>
+    <View style={{ display: 'flex', flexDirection: 'column', gap: spacing(4) }}>
       <Text variant="subtitle">Create Your First Village</Text>
 
       <Input

@@ -14,3 +14,5 @@ export * from './image';
 export * from './avatar';
 
 export * from './alert';
+
+export * from './toast';

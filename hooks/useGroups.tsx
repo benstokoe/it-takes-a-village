@@ -30,8 +30,6 @@ export function useGroups(): UseGroupsReturn {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  console.log('groups session', session);
-
   const fetchGroups = useCallback(async () => {
     if (!session?.user?.id) {
       setGroups([]);
@@ -43,7 +41,6 @@ export function useGroups(): UseGroupsReturn {
       setIsLoading(true);
       setError(null);
 
-      console.log('fetching groups');
       // First get groups where current user is a member
       const { data: userGroups, error: userGroupsError } = await supabase
         .from('group_members')
@@ -158,8 +155,6 @@ export function useGroups(): UseGroupsReturn {
           creator_id: session?.user?.id,
           name,
         });
-
-        console.log(data);
 
         if (error) {
           throw error;

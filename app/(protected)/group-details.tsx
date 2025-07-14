@@ -1,15 +1,15 @@
-import { View, ScrollView, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { Text } from '@/components/ui/text';
-import { Avatar, AvatarFallback, AvatarImage, Button, Spinner } from '@/components/ui';
-import { useLocalSearchParams, router, Stack } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { SPACING } from '@/theme/globals';
-import { useTheme } from '@react-navigation/native';
-import { useGroups, UserGroup } from '@/hooks/useGroups';
-import { useEffect, useState } from 'react';
-import { Users, Calendar, Settings, ArrowLeft, Trash2 } from 'lucide-react-native';
+import { SafeAreaView } from '@/components/safe-area-view';
+import { Avatar, AvatarFallback, AvatarImage, Spinner, useToast } from '@/components/ui';
 import { Icon } from '@/components/ui/icon';
+import { Button } from '@/components/ui/button';
+import { Text } from '@/components/text';
+import { useGroups, UserGroup } from '@/hooks/useGroups';
 import { useAuth } from '@/utils/useAuth';
+import { useTheme } from '@react-navigation/native';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { ArrowLeft, Calendar, Settings, Trash2, Users } from 'lucide-react-native';
+import { useEffect, useState } from 'react';
+import { Alert, ScrollView, TouchableOpacity, View } from 'react-native';
 
 export default function GroupDetails() {
   const { groupId } = useLocalSearchParams<{ groupId: string }>();
@@ -18,6 +18,7 @@ export default function GroupDetails() {
   const { colors } = useTheme();
   const { session } = useAuth();
   const [group, setGroup] = useState<UserGroup | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     if (groupId && groups.length > 0) {
@@ -34,73 +35,6 @@ export default function GroupDetails() {
         (member) => member.user_id === session.user.id && member.role === 'admin'
       ));
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: colors.background,
-    },
-    content: {
-      flex: 1,
-      padding: SPACING[4],
-    },
-    backButton: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginBottom: SPACING[4],
-      paddingVertical: SPACING[2],
-      alignSelf: 'flex-start',
-    },
-    headerContainer: {
-      marginBottom: SPACING[6],
-    },
-    header: {
-      marginBottom: SPACING[6],
-    },
-    section: {
-      marginBottom: SPACING[6],
-    },
-    sectionHeader: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginBottom: SPACING[3],
-      gap: SPACING[2],
-    },
-    memberGrid: {
-      gap: SPACING[2],
-    },
-    memberCard: {
-      backgroundColor: 'rgba(255, 255, 255, 0.05)',
-      borderRadius: 12,
-      padding: SPACING[3],
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: SPACING[3],
-      minWidth: '45%',
-      borderWidth: 1,
-      borderColor: 'rgba(255, 255, 255, 0.1)',
-    },
-    memberInfo: {
-      flex: 1,
-    },
-    actionButtons: {
-      flexDirection: 'row',
-      gap: SPACING[3],
-      marginTop: SPACING[4],
-    },
-    stats: {
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-      backgroundColor: 'rgba(255, 255, 255, 0.05)',
-      borderRadius: 12,
-      padding: SPACING[4],
-      marginBottom: SPACING[4],
-    },
-    statItem: {
-      alignItems: 'center',
-      gap: SPACING[1],
-    },
-  });
-
   if (!group) {
     return (
       <>
@@ -109,8 +43,8 @@ export default function GroupDetails() {
             headerShown: false,
           }}
         />
-        <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
-          <View style={styles.content}>
+        <SafeAreaView className="flex-1 bg-background p-4" edges={['top', 'bottom']}>
+          <View className="flex-1 p-4">
             <Spinner />
           </View>
         </SafeAreaView>
@@ -120,82 +54,69 @@ export default function GroupDetails() {
 
   return (
     <>
-      <Stack.Screen
-        options={{
-          headerShown: false,
-        }}
-      />
-      <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
-        <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          <View style={styles.headerContainer}>
+      <SafeAreaView className="flex-1 bg-background" edges={['top', 'bottom']}>
+        <ScrollView className="flex-1 p-4" showsVerticalScrollIndicator={false}>
+          <View className="mb-6">
             <TouchableOpacity
-              style={styles.backButton}
+              className="flex-row items-center gap-2 mb-4 py-2"
               onPress={() => router.back()}
               activeOpacity={0.7}>
               <Icon name={ArrowLeft} size={20} color={colors.text} />
-              <Text variant="body" style={{ marginLeft: SPACING[2] }}>
+              <Text variant="body" className="ml-2">
                 Back
               </Text>
             </TouchableOpacity>
 
-            <Text variant="heading" style={{ marginBottom: SPACING[2] }}>
+            <Text variant="heading" className="mb-2">
               {group.name}
             </Text>
             {group.description && (
-              <Text variant="body" style={{ opacity: 0.8 }}>
+              <Text variant="body" className="opacity-80">
                 {group.description}
               </Text>
             )}
           </View>
 
-          <View style={styles.stats}>
-            <View style={styles.statItem}>
+          <View className="flex-row justify-between bg-background/5 rounded-lg p-4 mb-4">
+            <View className="items-center gap-1">
               <Icon name={Users} size={24} color={colors.text} />
-              <Text variant="caption">{group.group_members.length}</Text>
-              <Text variant="caption" style={{ opacity: 0.6 }}>
-                Members
-              </Text>
+              <Text>{group.group_members.length}</Text>
+              <Text>Members</Text>
             </View>
-            <View style={styles.statItem}>
+            <View className="items-center gap-1">
               <Icon name={Calendar} size={24} color={colors.text} />
-              <Text variant="caption">0</Text>
-              <Text variant="caption" style={{ opacity: 0.6 }}>
-                Requests
-              </Text>
+              <Text>0</Text>
+              <Text>Requests</Text>
             </View>
-            <View style={styles.statItem}>
+            <View className="items-center gap-1">
               <Icon name={Settings} size={24} color={colors.text} />
-              <Text variant="caption">
+              <Text>
                 {group.created_by === group.group_members[0]?.user_id ? 'Admin' : 'Member'}
               </Text>
-              <Text variant="caption" style={{ opacity: 0.6 }}>
-                Role
-              </Text>
+              <Text>Role</Text>
             </View>
           </View>
 
-          <View style={styles.section}>
-            <View style={styles.sectionHeader}>
+          <View className="mb-6">
+            <View className="flex-row items-center gap-2 mb-3">
               <Icon name={Users} size={20} color={colors.text} />
               <Text variant="subtitle">Members ({group.group_members.length})</Text>
             </View>
 
-            <View style={styles.memberGrid}>
+            <View className="flex-col gap-2">
               {group.group_members.map((member) => (
-                <View key={member.id} style={styles.memberCard}>
+                <View
+                  key={member.id}
+                  className="w-full bg-background/5 rounded-lg p-3 flex-row items-center gap-3 border">
                   <Avatar>
                     <AvatarImage source={{ uri: member.profiles.avatar_url ?? '' }} />
                     <AvatarFallback>
                       {member.profiles.full_name?.split(' ')[0]?.[0] || 'U'}
                     </AvatarFallback>
                   </Avatar>
-                  <View style={styles.memberInfo}>
-                    <Text variant="body" numberOfLines={1}>
-                      {member.profiles.full_name || 'Unknown User'}
-                    </Text>
-                    <Text variant="caption" style={{ opacity: 0.6 }}>
-                      {member.relationship_label || member.role}
-                    </Text>
+                  <View className="flex-1">
+                    <Text numberOfLines={1}>{member.profiles.full_name || 'Unknown User'}</Text>
+                    <Text variant="caption">{member.relationship_label || member.role}</Text>
                   </View>
                   {isCurrentUserAdmin && member.user_id !== session?.user?.id && (
                     <TouchableOpacity
@@ -213,24 +134,29 @@ export default function GroupDetails() {
                               style: 'destructive',
                               onPress: async () => {
                                 const success = await removeMemberFromGroup(member.id, groupId);
+
                                 if (success) {
-                                  Alert.alert(
-                                    'Member removed',
-                                    `${member.profiles.full_name || 'This user'} has been removed from the group.`
-                                  );
-                                  router.back(); // Go back to refresh the list
+                                  toast({
+                                    title: 'Member removed',
+                                    description: `${member.profiles.full_name || 'This user'} has been removed from the group.`,
+                                    variant: 'success',
+                                  });
+                                  router.back();
                                 } else {
-                                  Alert.alert(
-                                    'Error removing member',
-                                    'Failed to remove the member from the group. Please try again.'
-                                  );
+                                  toast({
+                                    title: 'Error removing member',
+                                    description:
+                                      'Failed to remove the member from the group. Please try again.',
+                                    variant: 'error',
+                                  });
                                 }
                               },
                             },
                           ]
                         );
                       }}
-                      style={{ padding: SPACING[1] }}>
+                      className="p-1"
+                      activeOpacity={0.7}>
                       <Icon name={Trash2} size={18} color="#ef4444" />
                     </TouchableOpacity>
                   )}
@@ -239,28 +165,22 @@ export default function GroupDetails() {
             </View>
           </View>
 
-          <View style={styles.section}>
-            <View style={styles.sectionHeader}>
+          <View className="mb-6">
+            <View className="flex-row items-center gap-2 mb-3">
               <Icon name={Calendar} size={20} color={colors.text} />
               <Text variant="subtitle">Recent Activity</Text>
             </View>
-            <View
-              style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                borderRadius: 12,
-                padding: SPACING[4],
-                alignItems: 'center',
-              }}>
-              <Text variant="body" style={{ opacity: 0.6 }}>
+            <View className="bg-background/5 rounded-lg p-4 flex-col items-center">
+              <Text variant="body" className="opacity-60">
                 No recent activity
               </Text>
-              <Text variant="caption" style={{ opacity: 0.4, marginTop: SPACING[1] }}>
+              <Text variant="caption" className="opacity-40 mt-1">
                 Group activity will appear here
               </Text>
             </View>
           </View>
 
-          <View style={styles.actionButtons}>
+          <View className="flex-row gap-3">
             <Button
               variant="outline"
               onPress={() => {
@@ -272,8 +192,10 @@ export default function GroupDetails() {
             <Button
               variant="default"
               onPress={() => {
-                // TODO: Implement create request functionality
-                console.log('Create availability request');
+                router.push({
+                  pathname: '/(protected)/(tabs)/new-request',
+                  params: { groupId: group.id },
+                });
               }}>
               Create Request
             </Button>

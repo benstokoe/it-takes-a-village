@@ -15,8 +15,6 @@ type Props = {
 export const ThemeProvider = ({ children }: Props) => {
   const colorScheme = useColorScheme();
 
-  console.log('colorScheme', colorScheme);
-
   // Create custom themes that use your Colors
   const customLightTheme = {
     ...DefaultTheme,

@@ -1,19 +1,9 @@
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { FONT_SIZE } from '@/theme/globals';
 import React, { forwardRef } from 'react';
-import {
-  Text as RNText,
-  TextProps as RNTextProps,
-  TextStyle,
-} from 'react-native';
+import { Text as RNText, TextProps as RNTextProps, TextStyle } from 'react-native';
 
-type TextVariant =
-  | 'body'
-  | 'title'
-  | 'subtitle'
-  | 'caption'
-  | 'heading'
-  | 'link';
+type TextVariant = 'body' | 'title' | 'subtitle' | 'caption' | 'heading' | 'link';
 
 interface TextProps extends RNTextProps {
   variant?: TextVariant;
@@ -23,14 +13,8 @@ interface TextProps extends RNTextProps {
 }
 
 export const Text = forwardRef<RNText, TextProps>(
-  (
-    { variant = 'body', lightColor, darkColor, style, children, ...props },
-    ref
-  ) => {
-    const textColor = useThemeColor(
-      { light: lightColor, dark: darkColor },
-      'text'
-    );
+  ({ variant = 'body', lightColor, darkColor, style, children, ...props }, ref) => {
+    const textColor = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
     const mutedColor = useThemeColor({}, 'textMuted');
 
     const getTextStyle = (): TextStyle => {

@@ -1,9 +1,13 @@
-import { SafeAreaView } from 'react-native';
+import { cn } from '@/utils';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-export const Container = ({ children }: { children: React.ReactNode }) => {
-  return <SafeAreaView className={styles.container}>{children}</SafeAreaView>;
+type ContainerProps = {
+  children: React.ReactNode;
+  className?: string;
 };
 
-const styles = {
-  container: 'flex flex-1 m-6',
+export const Container = ({ children, className }: ContainerProps) => {
+  return (
+    <SafeAreaView className={cn('flex-1 p-4 flex-col gap-4', className)}>{children}</SafeAreaView>
+  );
 };

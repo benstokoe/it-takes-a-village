@@ -1,10 +1,10 @@
 import { Stack } from 'expo-router';
 import { View } from 'react-native';
-import { Container } from '@/components/Container';
 import { Text } from '@/components/ui/text';
 import { ModeToggle } from '@/components/ui/mode-toggle';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/utils/useAuth';
+import { SafeAreaView } from '@/components/safe-area-view';
 
 export default function Profile() {
   const { session, signOut } = useAuth();
@@ -13,7 +13,7 @@ export default function Profile() {
   return (
     <>
       <Stack.Screen options={{ title: 'Profile' }} />
-      <Container>
+      <SafeAreaView>
         <View className="gap-6">
           <View>
             <Text className="mb-2 text-2xl font-bold">Profile</Text>
@@ -47,7 +47,7 @@ export default function Profile() {
             </Button>
           </View>
         </View>
-      </Container>
+      </SafeAreaView>
     </>
   );
 }

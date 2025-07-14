@@ -1,8 +1,7 @@
-import { Tabs } from 'expo-router';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { Icon } from '@/components/ui';
-import { Home } from 'lucide-react-native';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { Tabs } from 'expo-router';
+import { Calendar, Home, Plus, Users } from 'lucide-react-native';
 
 export default function TabLayout() {
   return (
@@ -18,12 +17,24 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="groups"
+        options={{
+          title: 'Groups',
+          tabBarIcon: ({ color }) => <Icon size={24} name={Users} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="new-request"
+        options={{
+          title: 'New Request',
+          tabBarIcon: ({ color }) => <Icon size={24} name={Plus} color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="requests"
         options={{
           title: 'Requests',
-          tabBarIcon: ({ color }) => (
-            <FontAwesome6 size={24} name="person-circle-plus" color={color} />
-          ),
+          tabBarIcon: ({ color }) => <Icon size={24} name={Calendar} color={color} />,
         }}
       />
       <Tabs.Screen

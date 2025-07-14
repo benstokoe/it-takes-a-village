@@ -1,48 +1,31 @@
 import { Text } from '@/components/ui/text';
-import { SPACING } from '@/theme/globals';
 import { UserGroup } from '@/hooks/useGroups';
-import { Dimensions, StyleSheet, View, TouchableOpacity } from 'react-native';
-import { Avatar, AvatarFallback, AvatarImage, Carousel, CarouselItem } from './ui';
 import { useRouter } from 'expo-router';
+import { View } from 'react-native';
+import GroupCard from './group-card';
 
 type GroupsListProps = {
   groups: UserGroup[];
   isLoading: boolean;
+  onGroupPress?: (group: UserGroup) => void;
 };
 
-const { width: screenWidth } = Dimensions.get('window');
-
-export function GroupsList({ groups, isLoading }: GroupsListProps) {
+export function GroupsList({ groups, isLoading, onGroupPress }: GroupsListProps) {
   const router = useRouter();
 
-  const styles = StyleSheet.create({
-    container: {
-      marginTop: SPACING[6],
-      display: 'flex',
-      flexDirection: 'column',
-      gap: SPACING[4],
-    },
-    cardList: {},
-    groupCard: {
-      display: 'flex',
-      flexDirection: 'column',
-      gap: SPACING[3],
-    },
-  });
-
-  const handleGroupPress = (group: UserGroup) => {
+  function handleGroupPress(group: UserGroup) {
     router.push({
-      pathname: '/group-details',
+      pathname: '/(protected)/group-details',
       params: {
         groupId: group.id,
       },
     });
-  };
+  }
 
   if (isLoading) {
     return (
       <View className="py-8">
-        <Text className="text-center text-gray-600">Loading your villages...</Text>
+        <Text className="text-center text-gray-600">Loading your groups...</Text>
       </View>
     );
   }
@@ -52,33 +35,18 @@ export function GroupsList({ groups, isLoading }: GroupsListProps) {
   }
 
   return (
-    <View style={styles.container}>
-      <Text variant="subtitle">Your Villages</Text>
+    <View className="flex-col gap-4">
+      <Text variant="subtitle">Your Groups</Text>
 
-      <Carousel style={styles.cardList} itemWidth={screenWidth * 0.8} spacing={SPACING[4]}>
+      <View className="flex-col gap-4">
         {groups.map((group) => (
-          <CarouselItem key={group.id}>
-            <TouchableOpacity
-              style={styles.groupCard}
-              onPress={() => handleGroupPress(group)}
-              activeOpacity={0.8}>
-              <Text variant="subtitle">{group.name}</Text>
-              {group.description && <Text>{group.description}</Text>}
-
-              <View style={{ display: 'flex', flexDirection: 'row', gap: SPACING[1] }}>
-                {group.group_members.map((member) => (
-                  <Avatar key={member.id}>
-                    <AvatarImage source={{ uri: member.profiles.avatar_url ?? '' }} />
-                    <AvatarFallback>
-                      {member.profiles.full_name?.split(' ')[0].split('')[0]}
-                    </AvatarFallback>
-                  </Avatar>
-                ))}
-              </View>
-            </TouchableOpacity>
-          </CarouselItem>
+          <GroupCard
+            key={group.id}
+            group={group}
+            onPress={() => (onGroupPress ? onGroupPress(group) : handleGroupPress(group))}
+          />
         ))}
-      </Carousel>
+      </View>
     </View>
   );
 }

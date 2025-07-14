@@ -1,13 +1,13 @@
 import { Stack } from 'expo-router';
+import { SafeAreaView } from '@/components/safe-area-view';
+import { Text } from '@/components/text';
 import { View } from 'react-native';
-import { Container } from '@/components/Container';
-import { Text } from '@/components/ui/text';
 
 export default function Requests() {
   return (
     <>
       <Stack.Screen options={{ title: 'Requests' }} />
-      <Container>
+      <SafeAreaView>
         <View className="gap-6">
           <View>
             <Text className="mb-2 text-2xl font-bold">Requests</Text>
@@ -23,7 +23,7 @@ export default function Requests() {
             </Text>
           </View>
         </View>
-      </Container>
+      </SafeAreaView>
     </>
   );
 }

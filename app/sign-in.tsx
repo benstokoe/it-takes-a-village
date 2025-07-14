@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Form, FormField, FormInput } from '@/components/ui/form';
 import { useAuth } from '@/utils/useAuth';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { SPACING } from '@/theme/globals';
+import { spacing } from '@/theme/globals';
 const formSchema = z.object({
   email: z.string().email('Please enter a valid email address.'),
   password: z
@@ -48,9 +48,7 @@ export default function SignIn() {
   }
 
   return (
-    <SafeAreaView
-      style={{ flex: 1, backgroundColor: 'background', padding: SPACING[1] }}
-      edges={['top', 'bottom']}>
+    <SafeAreaView className="flex-1 bg-background p-4" edges={['top', 'bottom']}>
       <View className="web:m-4 flex-1 gap-4">
         <Form {...form}>
           <View className="gap-4">
