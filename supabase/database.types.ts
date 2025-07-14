@@ -160,21 +160,21 @@ export type Database = {
       group_invitations: {
         Row: {
           created_at: string
-          creator: string | null
+          creator_id: string | null
           group_id: string | null
           id: number
           name: string | null
         }
         Insert: {
           created_at?: string
-          creator?: string | null
+          creator_id?: string | null
           group_id?: string | null
           id?: number
           name?: string | null
         }
         Update: {
           created_at?: string
-          creator?: string | null
+          creator_id?: string | null
           group_id?: string | null
           id?: number
           name?: string | null

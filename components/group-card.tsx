@@ -1,4 +1,4 @@
-import { UserGroup } from '@/hooks/useGroups';
+import { UserGroup } from '@/hooks/group/useGroups';
 import { TouchableOpacity, View } from 'react-native';
 import { Card } from '@/components/card';
 import { Text } from '@/components/text';

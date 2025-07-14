@@ -1,25 +1,17 @@
 import { Stack } from 'expo-router';
-import { Alert, View } from 'react-native';
+import { View } from 'react-native';
 
-import { CreateGroupForm } from '@/components/CreateGroupForm';
-import { GroupsList } from '@/components/GroupsList';
+import { Container } from '@/components/container';
+import { CreateGroupForm } from '@/components/create-group-form';
+import { GroupsList } from '@/components/groups-list';
 import { Avatar, AvatarFallback, AvatarImage, Card } from '@/components/ui';
 import { Text } from '@/components/ui/text';
-import { useGroups } from '@/hooks/useGroups';
+import { useGroups } from '@/hooks/group/useGroups';
 import { useAuth } from '@/utils/useAuth';
-import { Container } from '@/components/container';
 
 export default function Home() {
   const { profile } = useAuth();
-  const { groups, isLoading, error, createGroup } = useGroups();
-
-  const handleCreateGroup = async (name: string, description?: string) => {
-    const newGroup = await createGroup(name, description);
-
-    if (newGroup) {
-      Alert.alert('Success', `${name} has been created!`);
-    }
-  };
+  const { groups, isLoading, error } = useGroups();
 
   if (error) {
     return (
@@ -61,7 +53,7 @@ export default function Home() {
               You&rsquo;re not part of any villages yet. Create your first village to start
               coordinating with family and friends!
             </Text>
-            <CreateGroupForm onGroupCreated={handleCreateGroup} isLoading={isLoading} />
+            <CreateGroupForm />
           </View>
         ) : (
           <View className="flex-col gap-4">

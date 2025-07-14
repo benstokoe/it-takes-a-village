@@ -1,10 +1,10 @@
 import { Card } from '@/components/card';
 import { Container } from '@/components/container';
-import { GroupsList } from '@/components/GroupsList';
+import { GroupsList } from '@/components/groups-list';
 import { SafeAreaView } from '@/components/safe-area-view';
 import { Text } from '@/components/text';
-import { useGroup } from '@/hooks/useGroup';
-import { useGroups, UserGroup } from '@/hooks/useGroups';
+import { useGroup } from '@/hooks/group/useGroup';
+import { useGroups, UserGroup } from '@/hooks/group/useGroups';
 import { useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { useCallback, useState } from 'react';
 
@@ -21,9 +21,7 @@ export default function NewRequest() {
     }, [])
   );
 
-  console.log('selectedGroup', selectedGroup);
-
-  const { data, isLoading, error } = useGroup(selectedGroup);
+  const { data, isLoading } = useGroup(selectedGroup);
 
   const { groups } = useGroups();
 

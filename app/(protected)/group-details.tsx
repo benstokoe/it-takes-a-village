@@ -1,31 +1,34 @@
-import { SafeAreaView } from '@/components/safe-area-view';
-import { Avatar, AvatarFallback, AvatarImage, Spinner, useToast } from '@/components/ui';
-import { Icon } from '@/components/ui/icon';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/button';
+import { Card } from '@/components/card';
+import { Container } from '@/components/container';
 import { Text } from '@/components/text';
-import { useGroups, UserGroup } from '@/hooks/useGroups';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  ShareButton,
+  Spinner,
+  useToast,
+} from '@/components/ui';
+import { Icon } from '@/components/ui/icon';
+import useDeleteGroup from '@/hooks/group/useDeleteGroup';
+import { useGroup } from '@/hooks/group/useGroup';
+import useRemoveMember from '@/hooks/group/useRemoveMember';
 import { useAuth } from '@/utils/useAuth';
 import { useTheme } from '@react-navigation/native';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { ArrowLeft, Calendar, Settings, Trash2, Users } from 'lucide-react-native';
-import { useEffect, useState } from 'react';
 import { Alert, ScrollView, TouchableOpacity, View } from 'react-native';
 
 export default function GroupDetails() {
   const { groupId } = useLocalSearchParams<{ groupId: string }>();
 
-  const { groups, removeMemberFromGroup } = useGroups();
+  const { data: group, isLoading } = useGroup(groupId);
+  const { removeMember, isRemovingMember } = useRemoveMember(groupId);
+  const { deleteGroup, isDeletingGroup } = useDeleteGroup();
   const { colors } = useTheme();
   const { session } = useAuth();
-  const [group, setGroup] = useState<UserGroup | null>(null);
   const { toast } = useToast();
-
-  useEffect(() => {
-    if (groupId && groups.length > 0) {
-      const foundGroup = groups.find((g) => g.id === groupId);
-      setGroup(foundGroup || null);
-    }
-  }, [groupId, groups]);
 
   const isCurrentUserAdmin =
     group &&
@@ -35,38 +38,41 @@ export default function GroupDetails() {
         (member) => member.user_id === session.user.id && member.role === 'admin'
       ));
 
+  if (isLoading) {
+    return (
+      <Container>
+        <View className="flex-1 p-4">
+          <Spinner />
+        </View>
+      </Container>
+    );
+  }
+
   if (!group) {
     return (
-      <>
-        <Stack.Screen
-          options={{
-            headerShown: false,
-          }}
-        />
-        <SafeAreaView className="flex-1 bg-background p-4" edges={['top', 'bottom']}>
-          <View className="flex-1 p-4">
-            <Spinner />
-          </View>
-        </SafeAreaView>
-      </>
+      <Container>
+        <View className="flex-1 p-4">
+          <Text>Group not found</Text>
+        </View>
+      </Container>
     );
   }
 
   return (
     <>
-      <SafeAreaView className="flex-1 bg-background" edges={['top', 'bottom']}>
+      <Container>
+        <TouchableOpacity
+          className="flex-row items-center gap-2 py-2 px-4"
+          onPress={() => router.back()}
+          activeOpacity={0.7}>
+          <Icon name={ArrowLeft} size={20} color={colors.text} />
+          <Text variant="body" className="ml-2">
+            Back
+          </Text>
+        </TouchableOpacity>
+
         <ScrollView className="flex-1 p-4" showsVerticalScrollIndicator={false}>
           <View className="mb-6">
-            <TouchableOpacity
-              className="flex-row items-center gap-2 mb-4 py-2"
-              onPress={() => router.back()}
-              activeOpacity={0.7}>
-              <Icon name={ArrowLeft} size={20} color={colors.text} />
-              <Text variant="body" className="ml-2">
-                Back
-              </Text>
-            </TouchableOpacity>
-
             <Text variant="heading" className="mb-2">
               {group.name}
             </Text>
@@ -105,9 +111,9 @@ export default function GroupDetails() {
 
             <View className="flex-col gap-2">
               {group.group_members.map((member) => (
-                <View
+                <Card
                   key={member.id}
-                  className="w-full bg-background/5 rounded-lg p-3 flex-row items-center gap-3 border">
+                  className="w-full bg-background/5 rounded-lg p-3 flex-row items-center gap-3">
                   <Avatar>
                     <AvatarImage source={{ uri: member.profiles.avatar_url ?? '' }} />
                     <AvatarFallback>
@@ -133,16 +139,15 @@ export default function GroupDetails() {
                               text: 'Remove',
                               style: 'destructive',
                               onPress: async () => {
-                                const success = await removeMemberFromGroup(member.id, groupId);
+                                try {
+                                  await removeMember({ memberId: member.id });
 
-                                if (success) {
                                   toast({
                                     title: 'Member removed',
                                     description: `${member.profiles.full_name || 'This user'} has been removed from the group.`,
                                     variant: 'success',
                                   });
-                                  router.back();
-                                } else {
+                                } catch {
                                   toast({
                                     title: 'Error removing member',
                                     description:
@@ -157,10 +162,14 @@ export default function GroupDetails() {
                       }}
                       className="p-1"
                       activeOpacity={0.7}>
-                      <Icon name={Trash2} size={18} color="#ef4444" />
+                      {isRemovingMember ? (
+                        <Spinner size="sm" />
+                      ) : (
+                        <Icon name={Trash2} size={18} color="#ef4444" />
+                      )}
                     </TouchableOpacity>
                   )}
-                </View>
+                </Card>
               ))}
             </View>
           </View>
@@ -180,17 +189,56 @@ export default function GroupDetails() {
             </View>
           </View>
 
-          <View className="flex-row gap-3">
-            <Button
+          <View className="gap-2">
+            <ShareButton
               variant="outline"
-              onPress={() => {
-                // TODO: Implement invite functionality
-                console.log('Invite member to group');
+              content={{
+                message: `Join my group ${group.name}, invite code: ${group.invite_code}`,
+                url: `https://app.family-request.com/group/${group.id}`,
               }}>
               Invite Member
+            </ShareButton>
+
+            <Button
+              variant="destructive"
+              className="flex-1"
+              loading={isDeletingGroup}
+              onPress={() =>
+                Alert.alert('Delete Group', `Are you sure you want to delete this group?`, [
+                  {
+                    text: 'Cancel',
+                    style: 'cancel',
+                  },
+                  {
+                    text: 'Remove',
+                    style: 'destructive',
+                    onPress: async () => {
+                      try {
+                        await deleteGroup(groupId);
+
+                        toast({
+                          title: 'Group deleted',
+                          description: `The group has been deleted.`,
+                          variant: 'success',
+                        });
+                        router.back();
+                      } catch {
+                        toast({
+                          title: 'Error deleting group',
+                          description: 'Failed to delete the group. Please try again.',
+                          variant: 'error',
+                        });
+                      }
+                    },
+                  },
+                ])
+              }>
+              Delete Group
             </Button>
+
             <Button
               variant="default"
+              className="flex-1"
               onPress={() => {
                 router.push({
                   pathname: '/(protected)/(tabs)/new-request',
@@ -201,7 +249,7 @@ export default function GroupDetails() {
             </Button>
           </View>
         </ScrollView>
-      </SafeAreaView>
+      </Container>
     </>
   );
 }

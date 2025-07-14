@@ -15,6 +15,9 @@ import { Input } from '@/components/ui/input';
 // import { Switch } from '@/components/ui/switch';
 // import { Textarea } from '@/components/ui/textarea';
 import { Text } from './text';
+import { cn } from '@/utils';
+import { RadioGroup } from './radio';
+import { Switch } from './switch';
 
 const Form = FormProvider;
 
@@ -212,15 +215,15 @@ const FormInput = React.forwardRef<
 FormInput.displayName = 'FormInput';
 
 const FormTextarea = React.forwardRef<
-  React.ComponentRef<typeof Textarea>,
-  FormItemProps<typeof Textarea, string>
+  React.ComponentRef<typeof Input>,
+  FormItemProps<typeof Input, string>
 >(({ label, description, onChange, ...props }, ref) => {
-  const textareaRef = React.useRef<React.ComponentRef<typeof Textarea>>(null);
+  const textareaRef = React.useRef<React.ComponentRef<typeof Input>>(null);
   const { error, formItemNativeID, formDescriptionNativeID, formMessageNativeID } = useFormField();
 
   React.useImperativeHandle(ref, () => {
     if (!textareaRef.current) {
-      return {} as React.ComponentRef<typeof Textarea>;
+      return {} as React.ComponentRef<typeof Input>;
     }
     return textareaRef.current;
   }, [textareaRef.current]);
@@ -244,7 +247,7 @@ const FormTextarea = React.forwardRef<
         </FormLabel>
       )}
 
-      <Textarea
+      <Input
         ref={textareaRef}
         aria-labelledby={formItemNativeID}
         aria-describedby={
