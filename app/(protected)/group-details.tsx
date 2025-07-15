@@ -53,7 +53,7 @@ export default function GroupDetails() {
     <>
       <Container>
         <TouchableOpacity
-          className="flex-row items-center gap-2 py-2 px-4"
+          className="flex-row items-center"
           onPress={() => router.back()}
           activeOpacity={0.7}>
           <Icon name={ArrowLeft} size={20} color={colors.text} />
@@ -62,7 +62,7 @@ export default function GroupDetails() {
           </Text>
         </TouchableOpacity>
 
-        <ScrollView className="flex-1 p-4" showsVerticalScrollIndicator={false}>
+        <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
           <View className="mb-6">
             <Text variant="heading" className="mb-2">
               {group.name}
