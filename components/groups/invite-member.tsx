@@ -1,17 +1,15 @@
+import { Form, FormField, FormInput } from '@/components/ui/form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UserPlus } from 'lucide-react-native';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { Form, FormField, FormInput } from '@/components/ui/form';
+import { useEffect } from 'react';
 import z from 'zod';
 import { Button } from '../button';
-import { useToast, View, Text } from '../ui';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { useToast, View } from '../ui';
 
-import { useForm } from 'react-hook-form';
-import { Input } from '../ui/input';
-import { Sheet, useSheetRef } from '../sheet';
-import { BottomSheet } from '../ui/bottom-sheet';
 import { useInviteToGroup } from '@/hooks/group/useInviteToGroup';
+import { useForm } from 'react-hook-form';
+import { useSheetRef } from '../sheet';
+import { BottomSheet } from '../ui/bottom-sheet';
 
 type InviteMemberProps = {
   groupId: string;

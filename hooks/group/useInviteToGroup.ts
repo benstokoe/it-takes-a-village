@@ -8,10 +8,24 @@ export function useInviteToGroup() {
   const userId = session?.user?.id;
 
   const inviteToGroupMutation = useMutation({
-    mutationFn: async ({ groupId, email }: { groupId: string; email: string }) => {
+    mutationFn: async ({
+      groupId,
+      email,
+      relationship,
+    }: {
+      groupId: string;
+      email: string;
+      relationship: string;
+    }) => {
       if (!userId) throw new Error('User must be authenticated');
 
-      const { data, error } = await inviteToGroupQuery(supabase, groupId, userId, email);
+      const { data, error } = await inviteToGroupQuery(
+        supabase,
+        groupId,
+        userId,
+        email,
+        relationship
+      );
       if (error) throw error;
       return data;
     },

@@ -4,7 +4,8 @@ export default async function inviteToGroup(
   client: SupabaseClient,
   groupId: string,
   creatorId: string,
-  email: string
+  email: string,
+  relationship: string
 ) {
   return { data: null, error: null };
 }
