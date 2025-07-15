@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Text } from '@/components/ui/text';
 import { spacing } from '@/theme/globals';
 import { useState } from 'react';
-import { useToast, View } from './ui';
+import { useToast, View } from '@/components/ui';
 import useCreateGroup from '@/hooks/group/useCreateGroup';
 
 type CreateGroupFormProps = {

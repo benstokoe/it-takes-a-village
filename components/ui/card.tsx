@@ -28,8 +28,7 @@ export function Card({ children, style }: CardProps) {
           elevation: 2,
         },
         style,
-      ]}
-    >
+      ]}>
       {children}
     </View>
   );
@@ -52,14 +51,13 @@ interface CardTitleProps {
 export function CardTitle({ children, style }: CardTitleProps) {
   return (
     <Text
-      variant='title'
+      variant="title"
       style={[
         {
           marginBottom: 4,
         },
         style,
-      ]}
-    >
+      ]}>
       {children}
     </Text>
   );
@@ -72,7 +70,7 @@ interface CardDescriptionProps {
 
 export function CardDescription({ children, style }: CardDescriptionProps) {
   return (
-    <Text variant='caption' style={[style]}>
+    <Text variant="caption" style={[style]}>
       {children}
     </Text>
   );
@@ -102,8 +100,7 @@ export function CardFooter({ children, style }: CardFooterProps) {
           gap: 8,
         },
         style,
-      ]}
-    >
+      ]}>
       {children}
     </View>
   );

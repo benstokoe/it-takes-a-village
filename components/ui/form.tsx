@@ -204,10 +204,11 @@ const FormInput = React.forwardRef<
         }
         aria-invalid={!!error}
         onChangeText={onChange}
+        variant="outline"
+        error={error?.message}
         {...props}
       />
       {!!description && <FormDescription>{description}</FormDescription>}
-      <FormMessage />
     </FormItem>
   );
 });
@@ -257,6 +258,7 @@ const FormTextarea = React.forwardRef<
         }
         aria-invalid={!!error}
         onChangeText={onChange}
+        error={error?.message}
         {...props}
       />
       {!!description && <FormDescription>{description}</FormDescription>}

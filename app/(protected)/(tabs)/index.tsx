@@ -2,8 +2,8 @@ import { Stack } from 'expo-router';
 import { View } from 'react-native';
 
 import { Container } from '@/components/container';
-import { CreateGroupForm } from '@/components/create-group-form';
-import { GroupsList } from '@/components/groups-list';
+import { CreateGroupForm } from '@/components/groups/create-group-form';
+import { GroupsList } from '@/components/groups/groups-list';
 import { Avatar, AvatarFallback, AvatarImage, Card } from '@/components/ui';
 import { Text } from '@/components/ui/text';
 import { useGroups } from '@/hooks/group/useGroups';

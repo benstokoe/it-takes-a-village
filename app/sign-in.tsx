@@ -7,9 +7,9 @@ import { Button } from '@/components/ui/button';
 import { Form, FormField, FormInput } from '@/components/ui/form';
 import { useAuth } from '@/utils/useAuth';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { spacing } from '@/theme/globals';
+
 const formSchema = z.object({
-  email: z.string().email('Please enter a valid email address.'),
+  email: z.email('Please enter a valid email address.'),
   password: z
     .string()
     .min(8, 'Please enter at least 8 characters.')

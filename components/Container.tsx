@@ -1,8 +1,9 @@
 import { cn } from '@/utils';
+import { ReactNode } from 'react';
 import { Edge, SafeAreaView } from 'react-native-safe-area-context';
 
 type ContainerProps = {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
   edges?: Edge[];
 };

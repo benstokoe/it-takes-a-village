@@ -3,7 +3,7 @@ import { Alert, ActivityIndicator } from 'react-native';
 import { Text } from '@/components/ui/text';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { View } from './ui';
+import { View } from '../ui';
 import { spacing } from '@/theme/globals';
 
 type JoinGroupFormProps = {

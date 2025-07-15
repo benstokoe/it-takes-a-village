@@ -4,11 +4,7 @@ export default async function inviteToGroup(
   client: SupabaseClient,
   groupId: string,
   creatorId: string,
-  name: string
+  email: string
 ) {
-  return client.rpc('group_invitations', {
-    group_id: groupId,
-    creator_id: creatorId,
-    name,
-  });
+  return { data: null, error: null };
 }

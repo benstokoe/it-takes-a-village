@@ -1,6 +1,6 @@
 import { Card } from '@/components/card';
 import { Container } from '@/components/container';
-import { GroupsList } from '@/components/groups-list';
+import { GroupsList } from '@/components/groups/groups-list';
 import { SafeAreaView } from '@/components/safe-area-view';
 import { Text } from '@/components/text';
 import { useGroup } from '@/hooks/group/useGroup';
