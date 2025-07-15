@@ -61,19 +61,19 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const router = useRouter();
 
   const fetchProfile = useCallback(async (userId: string) => {
-    try {
-      console.log('fetching profile', userId);
-      const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single();
-      console.log('profile data', data);
-      if (error) {
-        console.error('Error fetching profile:', error);
-        return null;
-      }
-      return data;
-    } catch (error) {
-      console.error('Error fetching profile:', error);
-      return null;
-    }
+    // try {
+    //   console.log('fetching profile', userId);
+    //   const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single();
+    //   console.log('profile data', data);
+    //   if (error) {
+    //     console.error('Error fetching profile:', error);
+    //     return null;
+    //   }
+    //   return data;
+    // } catch (error) {
+    //   console.error('Error fetching profile:', error);
+    //   return null;
+    // }
   }, []);
 
   useEffect(() => {
@@ -114,8 +114,8 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       setSession(session);
 
       if (session?.user?.id) {
-        const userProfile = await fetchProfile(session.user.id);
-        setProfile(userProfile);
+        // const userProfile = await fetchProfile(session.user.id);
+        // setProfile(userProfile);
       }
     });
 

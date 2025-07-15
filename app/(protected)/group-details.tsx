@@ -11,7 +11,7 @@ import { useGroup } from '@/hooks/group/useGroup';
 import { useAuth } from '@/utils/useAuth';
 import { useTheme } from '@react-navigation/native';
 import { router, useLocalSearchParams } from 'expo-router';
-import { ArrowLeft, Calendar, Plus, Settings, UserPlus, Users } from 'lucide-react-native';
+import { ArrowLeft, Calendar, Plus, UserPlus, Users } from 'lucide-react-native';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
 
 export default function GroupDetails() {

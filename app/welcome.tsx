@@ -29,10 +29,10 @@ export default function WelcomeScreen() {
   return (
     <SafeAreaView className="flex-1 bg-background p-4" edges={['top', 'bottom']}>
       <View className="flex-1 justify-center items-center gap-4">
-        <Text variant="heading" className="text-center">
+        <Text variant="heading" className="text-center text-5xl">
           Welcome to It Takes A Village
         </Text>
-        <Text variant="body" className="text-center">
+        <Text variant="title" font="sans-serif" className="text-center">
           Easily book and manage your availability with your friends and family.
         </Text>
       </View>

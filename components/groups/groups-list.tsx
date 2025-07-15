@@ -1,8 +1,9 @@
-import { Text } from '@/components/ui/text';
+import { Text } from '@/components/text';
 import { UserGroup } from '@/hooks/group/types';
 import { useRouter } from 'expo-router';
-import { View } from 'react-native';
+import { Dimensions, View } from 'react-native';
 import GroupCard from './group-card';
+import { FlashList } from '@shopify/flash-list';
 
 type GroupsListProps = {
   groups: UserGroup[];
@@ -36,16 +37,29 @@ export function GroupsList({ groups, isLoading, onGroupPress }: GroupsListProps)
 
   return (
     <View className="flex-col gap-4">
-      <Text variant="subtitle">Your Groups</Text>
+      <Text variant="title">Your Groups</Text>
 
       <View className="flex-col gap-4">
-        {groups.map((group) => (
+        <View style={{ flex: 1, minHeight: 200 }}>
+          <FlashList
+            data={groups}
+            renderItem={({ item }) => (
+              <GroupCard
+                group={item}
+                onPress={() => (onGroupPress ? onGroupPress(item) : handleGroupPress(item))}
+              />
+            )}
+            estimatedItemSize={groups.length}
+          />
+        </View>
+
+        {/* {groups.map((group) => (
           <GroupCard
             key={group.id}
             group={group}
             onPress={() => (onGroupPress ? onGroupPress(group) : handleGroupPress(group))}
           />
-        ))}
+        ))} */}
       </View>
     </View>
   );

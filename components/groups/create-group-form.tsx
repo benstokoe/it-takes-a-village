@@ -69,8 +69,6 @@ export function CreateGroupForm({ onSuccess }: CreateGroupFormProps) {
 
   return (
     <View style={{ display: 'flex', flexDirection: 'column', gap: spacing(4) }}>
-      <Text variant="subtitle">Create Your First Village</Text>
-
       <Input
         placeholder="Group name (e.g., The Johnson Family)"
         value={name}

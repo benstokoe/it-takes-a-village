@@ -1,4 +1,3 @@
-import { Stack } from 'expo-router';
 import { View } from 'react-native';
 
 import { Container } from '@/components/container';
@@ -16,7 +15,6 @@ export default function Home() {
   if (error) {
     return (
       <>
-        <Stack.Screen options={{ title: 'Home' }} />
         <Container>
           <Text className="text-red-500">Error loading groups: {error}</Text>
         </Container>
@@ -25,43 +23,42 @@ export default function Home() {
   }
 
   return (
-    <>
-      <Container>
-        <View className="flex-row items-center gap-2 mb-4">
-          <Avatar>
-            <AvatarImage source={{ uri: profile?.avatar_url ?? '' }} />
-            <AvatarFallback>{profile?.full_name?.split(' ')[0].split('')[0]}</AvatarFallback>
-          </Avatar>
+    <Container>
+      <View className="flex-row items-center gap-2 mb-4">
+        <Avatar>
+          <AvatarImage source={{ uri: profile?.avatar_url ?? '' }} />
+          <AvatarFallback>{profile?.full_name?.split(' ')[0].split('')[0]}</AvatarFallback>
+        </Avatar>
 
+        <View>
           <Text variant="title">
             Welcome back{profile?.full_name ? `, ${profile.full_name.split(' ')[0]}` : ''}!
           </Text>
+          <Text variant="caption">Here&rsquo;s what&rsquo;s happening in your villages</Text>
         </View>
+      </View>
 
-        <View className="flex-col gap-4">
-          <Text variant="title">Upcoming Events</Text>
-          <View className="flex-row gap-2">
-            <Card>
-              <Text>Event 1</Text>
-            </Card>
-          </View>
+      <View className="flex-col gap-4">
+        <Text variant="title">Upcoming Events</Text>
+
+        <View className="flex-row gap-2">
+          <Card>
+            <Text>Event 1</Text>
+          </Card>
         </View>
+      </View>
 
-        {groups.length === 0 && !isLoading ? (
-          <View className="mt-4">
-            <Text>
-              You&rsquo;re not part of any villages yet. Create your first village to start
-              coordinating with family and friends!
-            </Text>
-            <CreateGroupForm />
-          </View>
-        ) : (
-          <View className="flex-col gap-4">
-            <Text>Here&rsquo;s what&rsquo;s happening in your villages</Text>
-            <GroupsList groups={groups} isLoading={isLoading} />
-          </View>
-        )}
-      </Container>
-    </>
+      {groups.length === 0 && !isLoading ? (
+        <View className="mt-4">
+          <Text>
+            You&rsquo;re not part of any villages yet. Create your first village to start
+            coordinating with family and friends!
+          </Text>
+          <CreateGroupForm />
+        </View>
+      ) : (
+        <GroupsList groups={groups} isLoading={isLoading} />
+      )}
+    </Container>
   );
 }

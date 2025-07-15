@@ -1,8 +1,8 @@
-import { UserGroup } from '@/hooks/group/useGroups';
 import { TouchableOpacity, View } from 'react-native';
 import { Card } from '@/components/card';
 import { Text } from '@/components/text';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { UserGroup } from '@/hooks/group/types';
 
 type GroupCardProps = {
   group: UserGroup;
@@ -13,7 +13,7 @@ export default function GroupCard({ group, onPress }: GroupCardProps) {
   return (
     <TouchableOpacity key={group.id} onPress={() => onPress(group)} activeOpacity={0.8}>
       <Card className="flex-col gap-1">
-        <Text variant="subtitle">{group.name}</Text>
+        <Text variant="body">{group.name}</Text>
         {group.description && <Text>{group.description}</Text>}
 
         <View className="flex-row gap-1 mt-1">
