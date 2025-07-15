@@ -1,4 +1,3 @@
-import { AuthTokenResponsePassword } from '@supabase/supabase-js';
 import {
   createContext,
   PropsWithChildren,
@@ -8,19 +7,11 @@ import {
   useState,
 } from 'react';
 
-import { Profile } from '@/supabase/database.types';
-import { Session, supabase } from '@/utils/supabase';
+import { Profile, Session, supabase } from '@/utils/supabase';
 
 import { SplashScreen, useRouter } from 'expo-router';
 
 SplashScreen.preventAutoHideAsync();
-
-type AuthState = {
-  isAuthenticated: boolean;
-  token?: Session['access_token'];
-  user?: Session['user'];
-  profile?: Profile;
-};
 
 type SignInProps = {
   email: string;
@@ -40,22 +31,15 @@ type AuthContextType = {
   signIn: (props: SignInProps) => Promise<void>;
   signUp: (props: SignUpProps) => Promise<void>;
   signOut: () => void;
-  // updateProfile: (updates: Partial<Profile>) => Promise<void>;
-  // refreshProfile: () => Promise<void>;
 };
-// } & AuthState;
 
 const AuthContext = createContext<AuthContextType>({
   initialized: false,
   session: null,
-  // token: undefined,
-  // user: undefined,
   profile: null,
   signIn: () => new Promise(() => ({})),
   signUp: () => new Promise(() => ({})),
   signOut: () => Promise.resolve(),
-  // updateProfile: () => Promise.resolve(),
-  // refreshProfile: () => Promise.resolve(),
 });
 
 export function useAuth() {
@@ -72,21 +56,20 @@ export function useAuth() {
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [initialized, setInitialized] = useState(false);
-  // const [token, setToken] = useState<AuthState['token']>(undefined);
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const router = useRouter();
 
   const fetchProfile = useCallback(async (userId: string) => {
     try {
-      // console.log('fetching profile', userId);
-      // const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single();
-      // console.log('profile data', data);
-      // if (error) {
-      //   console.error('Error fetching profile:', error);
-      //   return null;
-      // }
-      // return data;
+      console.log('fetching profile', userId);
+      const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single();
+      console.log('profile data', data);
+      if (error) {
+        console.error('Error fetching profile:', error);
+        return null;
+      }
+      return data;
     } catch (error) {
       console.error('Error fetching profile:', error);
       return null;
@@ -249,15 +232,11 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       value={{
         initialized,
         session,
-        // isAuthenticated: !!token,
-        // token,
         // user,
         profile,
         signIn,
         signUp,
         signOut,
-        // updateProfile,
-        // refreshProfile,
       }}>
       {children}
     </AuthContext.Provider>
