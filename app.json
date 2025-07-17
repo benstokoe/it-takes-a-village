@@ -6,6 +6,7 @@
     "scheme": "it-takes-a-village",
     "plugins": [
       "expo-router",
+      "expo-system-ui",
       [
         "expo-dev-launcher",
         {
@@ -16,8 +17,22 @@
         "expo-font",
         {
           "fonts": [
-            "node_modules/@expo-google-fonts/playfair-display/PlayfairDisplay_400Regular.ttf"
+            "node_modules/@expo-google-fonts/plus-jakarta-sans/400Regular/PlusJakartaSans_400Regular.ttf",
+            "node_modules/@expo-google-fonts/plus-jakarta-sans/500Medium/PlusJakartaSans_500Medium.ttf",
+            "node_modules/@expo-google-fonts/plus-jakarta-sans/700Bold/PlusJakartaSans_700Bold.ttf"
           ]
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app needs access to your photos to let you select group images."
+        }
+      ],
+      [
+        "expo-asset",
+        {
+          "assets": ["./assets/images/welcome.svg"]
         }
       ]
     ],
@@ -38,7 +53,8 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.benstokoe.ittakesavillage",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSPhotoLibraryUsageDescription": "The app needs access to your photos to let you select group images."
       }
     },
     "android": {
@@ -46,7 +62,9 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.benstokoe.ittakesavillage"
+      "edgeToEdgeEnabled": true,
+      "package": "com.benstokoe.ittakesavillage",
+      "permissions": ["READ_EXTERNAL_STORAGE"]
     },
     "extra": {
       "router": {},

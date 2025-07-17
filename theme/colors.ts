@@ -16,7 +16,7 @@ const lightColors = {
   primaryForeground: '#FFFFFF',
 
   // Secondary colors
-  secondary: '#F2F2F7',
+  secondary: '#E5CCB2',
   secondaryForeground: '#18181b',
 
   // Muted colors
@@ -76,11 +76,11 @@ const lightColors = {
 
 const darkColors = {
   // Base colors
-  background: '#000000',
+  background: '#171412',
   foreground: '#FFFFFF',
 
   // Card colors
-  card: '#1C1C1E',
+  card: '#26211C',
   cardForeground: '#FFFFFF',
 
   // Popover colors
@@ -88,12 +88,12 @@ const darkColors = {
   popoverForeground: '#FFFFFF',
 
   // Primary colors
-  primary: '#e4e4e7',
-  primaryForeground: '#18181b',
+  primary: '#e5801a',
+  primaryForeground: '#171412',
 
   // Secondary colors
-  secondary: '#1C1C1E',
-  secondaryForeground: '#FFFFFF',
+  secondary: '#E5CCB2',
+  secondaryForeground: '#171412',
 
   // Muted colors
   muted: '#78788033',

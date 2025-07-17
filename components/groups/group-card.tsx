@@ -1,8 +1,8 @@
 import { TouchableOpacity, View } from 'react-native';
-import { Card } from '@/components/card';
 import { Text } from '@/components/text';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar } from '@/components/avatar';
 import { UserGroup } from '@/hooks/group/types';
+import { AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 type GroupCardProps = {
   group: UserGroup;
@@ -11,22 +11,34 @@ type GroupCardProps = {
 
 export default function GroupCard({ group, onPress }: GroupCardProps) {
   return (
-    <TouchableOpacity key={group.id} onPress={() => onPress(group)} activeOpacity={0.8}>
-      <Card className="flex-col gap-1">
-        <Text variant="body">{group.name}</Text>
-        {group.description && <Text>{group.description}</Text>}
+    <TouchableOpacity
+      className="gap-5"
+      key={group.id}
+      onPress={() => onPress(group)}
+      activeOpacity={0.8}>
+      <View className="flex-row items-center gap-4">
+        <View className="h-14 w-14 bg-secondary rounded-full" />
 
-        <View className="flex-row gap-1 mt-1">
-          {group.group_members.map((member) => (
-            <Avatar key={member.id}>
-              <AvatarImage source={{ uri: member.profiles.avatar_url ?? '' }} />
-              <AvatarFallback>
-                {member.profiles.full_name?.split(' ')[0].split('')[0]}
-              </AvatarFallback>
-            </Avatar>
-          ))}
+        <View className="flex-col gap-1">
+          <Text weight="medium">{group.name}</Text>
+          <Text variant="caption" fontSize="small">
+            {group.group_members.length} member{group.group_members.length > 1 ? 's' : ''}
+          </Text>
         </View>
-      </Card>
+      </View>
+
+      <View className="flex-row gap-1 mt-1">
+        {group.group_members.map((member, index) => (
+          <Avatar
+            size={36}
+            key={member.id}
+            className="border-[3px] border-background"
+            style={{ marginLeft: index === 0 ? 0 : -10 }}>
+            <AvatarImage source={{ uri: member.profiles.avatar_url ?? '' }} />
+            <AvatarFallback>{member.profiles.full_name?.split(' ')[0].split('')[0]}</AvatarFallback>
+          </Avatar>
+        ))}
+      </View>
     </TouchableOpacity>
   );
 }

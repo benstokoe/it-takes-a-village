@@ -1,5 +1,7 @@
 import { useRouter } from 'expo-router';
 import { View } from 'react-native';
+import { Image } from '@/components/ui/image';
+import { Asset } from 'expo-asset';
 
 import { Text } from '@/components/text';
 import { Button } from '@/components/button';
@@ -29,10 +31,12 @@ export default function WelcomeScreen() {
   return (
     <SafeAreaView className="flex-1 bg-background p-4" edges={['top', 'bottom']}>
       <View className="flex-1 justify-center items-center gap-4">
+        {/* <Image source={{ uri: 'welcome' }} /> */}
+
         <Text variant="heading" className="text-center text-5xl">
           Welcome to It Takes A Village
         </Text>
-        <Text variant="title" font="sans-serif" className="text-center">
+        <Text variant="title" className="text-center">
           Easily book and manage your availability with your friends and family.
         </Text>
       </View>

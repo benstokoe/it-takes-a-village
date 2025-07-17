@@ -47,18 +47,6 @@ export default function Home() {
           </Card>
         </View>
       </View>
-
-      {groups.length === 0 && !isLoading ? (
-        <View className="mt-4">
-          <Text>
-            You&rsquo;re not part of any villages yet. Create your first village to start
-            coordinating with family and friends!
-          </Text>
-          <CreateGroupForm />
-        </View>
-      ) : (
-        <GroupsList groups={groups} isLoading={isLoading} />
-      )}
     </Container>
   );
 }

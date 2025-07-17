@@ -1,19 +1,19 @@
 import useRemoveMember from '@/hooks/group/useRemoveMember';
-import { useRouter } from 'expo-router';
 import { Trash2 } from 'lucide-react-native';
 import { Button } from '../button';
 import { showConfirmAlert, useToast } from '../ui';
+import { useColorScheme } from '@/hooks/useColorScheme';
 
-type RemoveUserProps = {
+type RemoveMemberProps = {
   memberId: string;
   memberName: string;
   groupId: string;
 };
 
-export default function RemoveUser({ memberId, memberName, groupId }: RemoveUserProps) {
-  const router = useRouter();
+export default function RemoveMember({ memberId, memberName, groupId }: RemoveMemberProps) {
   const { toast } = useToast();
   const { removeMember, isRemovingMember } = useRemoveMember(groupId);
+  const { isDarkColorScheme } = useColorScheme();
 
   async function onConfirm() {
     try {
@@ -24,8 +24,6 @@ export default function RemoveUser({ memberId, memberName, groupId }: RemoveUser
         description: `${memberName || 'This user'} has been removed from the group.`,
         variant: 'success',
       });
-
-      router.back();
     } catch {
       toast({
         title: 'Error removing member',
@@ -37,8 +35,9 @@ export default function RemoveUser({ memberId, memberName, groupId }: RemoveUser
 
   return (
     <Button
-      variant="destructive"
+      variant="ghost"
       icon={Trash2}
+      iconColor={isDarkColorScheme ? 'white' : 'black'}
       size="icon"
       onPress={() => {
         showConfirmAlert(

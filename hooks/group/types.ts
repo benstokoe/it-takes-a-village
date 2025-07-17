@@ -1,7 +1,9 @@
-import { Group, GroupMember, Profile } from '@/utils/supabase';
+import { Group, GroupMember as SupabaseGroupMember, Profile } from '@/utils/supabase';
+
+export type GroupMember = SupabaseGroupMember & {
+  profiles: Profile;
+};
 
 export type UserGroup = Group & {
-  group_members: (GroupMember & {
-    profiles: Profile;
-  })[];
+  group_members: GroupMember[];
 };

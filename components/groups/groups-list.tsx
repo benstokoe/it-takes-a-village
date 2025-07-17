@@ -1,9 +1,9 @@
 import { Text } from '@/components/text';
 import { UserGroup } from '@/hooks/group/types';
 import { useRouter } from 'expo-router';
-import { Dimensions, View } from 'react-native';
+import { View } from 'react-native';
 import GroupCard from './group-card';
-import { FlashList } from '@shopify/flash-list';
+import { CreateGroupForm } from './create-group-form';
 
 type GroupsListProps = {
   groups: UserGroup[];
@@ -16,7 +16,7 @@ export function GroupsList({ groups, isLoading, onGroupPress }: GroupsListProps)
 
   function handleGroupPress(group: UserGroup) {
     router.push({
-      pathname: '/(protected)/group-details',
+      pathname: '/(protected)/(tabs)/group-details',
       params: {
         groupId: group.id,
       },
@@ -32,35 +32,27 @@ export function GroupsList({ groups, isLoading, onGroupPress }: GroupsListProps)
   }
 
   if (groups.length === 0) {
-    return null;
+    return (
+      <View className="mt-4">
+        <Text>
+          You&rsquo;re not part of any villages yet. Create your first village to start coordinating
+          with family and friends!
+        </Text>
+
+        <CreateGroupForm />
+      </View>
+    );
   }
 
   return (
-    <View className="flex-col gap-4">
-      <Text variant="title">Your Groups</Text>
-
-      <View className="flex-col gap-4">
-        <View style={{ flex: 1, minHeight: 200 }}>
-          <FlashList
-            data={groups}
-            renderItem={({ item }) => (
-              <GroupCard
-                group={item}
-                onPress={() => (onGroupPress ? onGroupPress(item) : handleGroupPress(item))}
-              />
-            )}
-            estimatedItemSize={groups.length}
-          />
-        </View>
-
-        {/* {groups.map((group) => (
-          <GroupCard
-            key={group.id}
-            group={group}
-            onPress={() => (onGroupPress ? onGroupPress(group) : handleGroupPress(group))}
-          />
-        ))} */}
-      </View>
+    <View className="flex-col gap-5">
+      {groups.map((group) => (
+        <GroupCard
+          key={group.id}
+          group={group}
+          onPress={() => (onGroupPress ? onGroupPress(group) : handleGroupPress(group))}
+        />
+      ))}
     </View>
   );
 }

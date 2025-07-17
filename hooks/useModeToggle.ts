@@ -14,8 +14,7 @@ interface UseModeToggleReturn {
 
 export function useModeToggle(): UseModeToggleReturn {
   const [mode, setModeState] = useState<Mode>('system');
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const { colorScheme, isDarkColorScheme, setColorScheme } = useColorScheme();
 
   const toggleMode = () => {
     switch (mode) {
@@ -37,11 +36,12 @@ export function useModeToggle(): UseModeToggleReturn {
       Appearance.setColorScheme(null); // Reset to system default
     } else {
       Appearance.setColorScheme(newMode);
+      setColorScheme(newMode);
     }
   };
 
   return {
-    isDark,
+    isDark: isDarkColorScheme,
     mode,
     setMode,
     currentMode: colorScheme,

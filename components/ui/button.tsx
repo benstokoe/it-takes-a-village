@@ -14,11 +14,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
 export type ButtonVariant =
   | 'default'
@@ -37,6 +33,7 @@ export interface ButtonProps extends Omit<TouchableOpacityProps, 'style'> {
   animation?: boolean;
   haptic?: boolean;
   icon?: React.ComponentType<LucideProps>;
+  iconColor?: string;
   onPress?: () => void;
   variant?: ButtonVariant;
   size?: ButtonSize;
@@ -52,6 +49,7 @@ export const Button = forwardRef<View, ButtonProps>(
     {
       children,
       icon,
+      iconColor,
       onPress,
       variant = 'default',
       size = 'default',
@@ -71,10 +69,7 @@ export const Button = forwardRef<View, ButtonProps>(
     const secondaryColor = useThemeColor({}, 'secondary');
     const secondaryForegroundColor = useThemeColor({}, 'secondaryForeground');
     const destructiveColor = useThemeColor({}, 'red');
-    const destructiveForegroundColor = useThemeColor(
-      {},
-      'destructiveForeground'
-    );
+    const destructiveForegroundColor = useThemeColor({}, 'destructiveForeground');
     const greenColor = useThemeColor({}, 'green');
     const borderColor = useThemeColor({}, 'border');
 
@@ -298,11 +293,11 @@ export const Button = forwardRef<View, ButtonProps>(
             alignSelf: 'stretch',
           }
         : flexValue !== null
-        ? {
-            flex: flexValue,
-            maxHeight: size === 'sm' ? 44 : size === 'lg' ? 54 : HEIGHT,
-          }
-        : {};
+          ? {
+              flex: flexValue,
+              maxHeight: size === 'sm' ? 44 : size === 'lg' ? 54 : HEIGHT,
+            }
+          : {};
     };
 
     // Updated getStyleWithoutFlex function
@@ -333,31 +328,18 @@ export const Button = forwardRef<View, ButtonProps>(
         onPressOut={handlePressOut}
         disabled={disabled || loading}
         style={getPressableStyle()}
-        {...props}
-      >
+        {...props}>
         <Animated.View style={[animatedStyle, buttonStyle, styleWithoutFlex]}>
           {loading ? (
-            <ButtonSpinner
-              size={size}
-              variant={loadingVariant}
-              color={contentColor}
-            />
+            <ButtonSpinner size={size} variant={loadingVariant} color={contentColor} />
           ) : typeof children === 'string' ? (
-            <View
-              style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}
-            >
-              {icon && (
-                <Icon name={icon} color={contentColor} size={iconSize} />
-              )}
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+              {icon && <Icon name={icon} color={iconColor ?? contentColor} size={iconSize} />}
               <Text style={[finalTextStyle, textStyle]}>{children}</Text>
             </View>
           ) : (
-            <View
-              style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}
-            >
-              {icon && (
-                <Icon name={icon} color={contentColor} size={iconSize} />
-              )}
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+              {icon && <Icon name={icon} color={iconColor ?? contentColor} size={iconSize} />}
               {children}
             </View>
           )}
@@ -370,14 +352,9 @@ export const Button = forwardRef<View, ButtonProps>(
         onPress={handleTouchablePress}
         disabled={disabled || loading}
         activeOpacity={0.8}
-        {...props}
-      >
+        {...props}>
         {loading ? (
-          <ButtonSpinner
-            size={size}
-            variant={loadingVariant}
-            color={contentColor}
-          />
+          <ButtonSpinner size={size} variant={loadingVariant} color={contentColor} />
         ) : typeof children === 'string' ? (
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
             {icon && <Icon name={icon} color={contentColor} size={iconSize} />}

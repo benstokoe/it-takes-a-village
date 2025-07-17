@@ -1,26 +1,8 @@
 import { Text } from '@/components/ui/text';
 import { AlertCircle, Check, Info, X } from 'lucide-react-native';
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import {
-  Animated,
-  Dimensions,
-  Platform,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from 'react-native';
-import {
-  Gesture,
-  GestureDetector,
-  GestureHandlerRootView,
-} from 'react-native-gesture-handler';
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { Animated, Dimensions, Platform, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export type ToastVariant = 'default' | 'success' | 'error' | 'warning' | 'info';
 
@@ -206,10 +188,7 @@ export function Toast({
     .onEnd((event) => {
       const { translationX, velocityX } = event;
 
-      if (
-        Math.abs(translationX) > screenWidth * 0.25 ||
-        Math.abs(velocityX) > 800
-      ) {
+      if (Math.abs(translationX) > screenWidth * 0.25 || Math.abs(velocityX) > 800) {
         // Dismiss the toast
         Animated.parallel([
           Animated.timing(translateX, {
@@ -273,8 +252,7 @@ export function Toast({
             transform: [{ translateY }, { translateX }, { scale }],
             opacity,
           },
-        ]}
-      >
+        ]}>
         <Animated.View
           style={[
             dynamicIslandStyle,
@@ -283,13 +261,10 @@ export function Toast({
               height,
               borderRadius,
             },
-          ]}
-        >
+          ]}>
           {/* Compact state - just icon or indicator */}
           {!isExpanded && (
-            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-              {getIcon()}
-            </View>
+            <View style={{ justifyContent: 'center', alignItems: 'center' }}>{getIcon()}</View>
           )}
 
           {/* Expanded state - full content */}
@@ -308,16 +283,13 @@ export function Toast({
                   flexDirection: 'row',
                   alignItems: 'center',
                 },
-              ]}
-            >
-              {getIcon() && (
-                <View style={{ marginRight: 12 }}>{getIcon()}</View>
-              )}
+              ]}>
+              {getIcon() && <View style={{ marginRight: 12 }}>{getIcon()}</View>}
 
               <View style={{ flex: 1, minWidth: 0 }}>
                 {title && (
                   <Text
-                    variant='subtitle'
+                    variant="subtitle"
                     style={{
                       color: '#FFFFFF',
                       fontSize: 15,
@@ -325,22 +297,20 @@ export function Toast({
                       marginBottom: description ? 2 : 0,
                     }}
                     numberOfLines={1}
-                    ellipsizeMode='tail'
-                  >
+                    ellipsizeMode="tail">
                     {title}
                   </Text>
                 )}
                 {description && (
                   <Text
-                    variant='caption'
+                    variant="caption"
                     style={{
                       color: mutedTextColor,
                       fontSize: 13,
                       fontWeight: '400',
                     }}
                     numberOfLines={2}
-                    ellipsizeMode='tail'
-                  >
+                    ellipsizeMode="tail">
                     {description}
                   </Text>
                 )}
@@ -355,16 +325,14 @@ export function Toast({
                     paddingVertical: 6,
                     backgroundColor: getVariantColor(),
                     borderRadius: 12,
-                  }}
-                >
+                  }}>
                   <Text
-                    variant='caption'
+                    variant="caption"
                     style={{
                       color: '#FFFFFF',
                       fontSize: 12,
                       fontWeight: '600',
-                    }}
-                  >
+                    }}>
                     {action.label}
                   </Text>
                 </TouchableOpacity>
@@ -376,8 +344,7 @@ export function Toast({
                   marginLeft: 8,
                   padding: 4,
                   borderRadius: 8,
-                }}
-              >
+                }}>
                 <X size={14} color={mutedTextColor} />
               </TouchableOpacity>
             </Animated.View>
@@ -455,14 +422,10 @@ export function ToastProvider({ children, maxToasts = 3 }: ToastProviderProps) {
 
   const contextValue: ToastContextType = {
     toast: addToast,
-    success: (title, description) =>
-      createVariantToast('success', title, description),
-    error: (title, description) =>
-      createVariantToast('error', title, description),
-    warning: (title, description) =>
-      createVariantToast('warning', title, description),
-    info: (title, description) =>
-      createVariantToast('info', title, description),
+    success: (title, description) => createVariantToast('success', title, description),
+    error: (title, description) => createVariantToast('error', title, description),
+    warning: (title, description) => createVariantToast('warning', title, description),
+    info: (title, description) => createVariantToast('info', title, description),
     dismiss: dismissToast,
     dismissAll,
   };
@@ -480,14 +443,9 @@ export function ToastProvider({ children, maxToasts = 3 }: ToastProviderProps) {
     <ToastContext.Provider value={contextValue}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         {children}
-        <View style={containerStyle} pointerEvents='box-none'>
+        <View style={containerStyle} pointerEvents="box-none">
           {toasts.map((toast, index) => (
-            <Toast
-              key={toast.id}
-              {...toast}
-              index={index}
-              onDismiss={dismissToast}
-            />
+            <Toast key={toast.id} {...toast} index={index} onDismiss={dismissToast} />
           ))}
         </View>
       </GestureHandlerRootView>

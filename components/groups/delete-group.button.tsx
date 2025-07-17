@@ -38,14 +38,13 @@ export default function DeleteGroupButton({ groupId, onSuccess }: DeleteGroupBut
 
   return (
     <Button
-      variant="destructive"
-      className="flex-1"
+      variant="secondary"
+      className="flex-1 rounded-full w-auto"
       loading={isDeletingGroup}
-      icon={Trash}
       onPress={() =>
         showConfirmAlert('Delete Group', `Are you sure you want to delete this group?`, onConfirm)
       }>
-      Delete Group
+      Delete
     </Button>
   );
 }

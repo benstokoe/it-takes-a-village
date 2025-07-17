@@ -44,6 +44,19 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <FontAwesome size={24} name="user" color={color} />,
         }}
       />
+
+      <Tabs.Screen
+        name="group-details"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="create-group"
+        options={{
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }

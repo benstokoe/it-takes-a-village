@@ -5,24 +5,23 @@ import { ToastProvider } from '@/components/ui';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { ThemeProvider } from '@/theme/theme-provider';
 import { AuthProvider } from '@/utils/useAuth';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import { Platform, TouchableOpacity } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-
-import { useFonts } from '@expo-google-fonts/playfair-display/useFonts';
-import { PlayfairDisplay_600SemiBold } from '@expo-google-fonts/playfair-display/600SemiBold';
-import { PlayfairDisplay_700Bold } from '@expo-google-fonts/playfair-display/700Bold';
-import { PlayfairDisplay_900Black } from '@expo-google-fonts/playfair-display/900Black';
 import {
-  SourceSansPro_400Regular,
-  SourceSansPro_600SemiBold,
-} from '@expo-google-fonts/source-sans-pro';
-import { DMSerifDisplay_400Regular } from '@expo-google-fonts/dm-serif-display';
-import { Outfit_400Regular, Outfit_600SemiBold, Outfit_700Bold } from '@expo-google-fonts/outfit';
+  useFonts,
+  PlusJakartaSans_400Regular,
+  PlusJakartaSans_500Medium,
+  PlusJakartaSans_700Bold,
+} from '@expo-google-fonts/plus-jakarta-sans';
+import * as SplashScreen from 'expo-splash-screen';
+import { useEffect } from 'react';
+
+SplashScreen.preventAutoHideAsync();
 
 const useIsomorphicLayoutEffect =
   Platform.OS === 'web' && typeof window === 'undefined' ? React.useEffect : React.useLayoutEffect;
@@ -42,19 +41,13 @@ const queryClient = new QueryClient({
 
 export default function RootLayout() {
   const hasMounted = React.useRef(false);
-  const colorScheme = useColorScheme();
+  const { isDarkColorScheme } = useColorScheme();
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
 
-  const [fontsLoaded] = useFonts({
-    PlayfairDisplay_900Black,
-    PlayfairDisplay_700Bold,
-    PlayfairDisplay_600SemiBold,
-    SourceSansPro_400Regular,
-    SourceSansPro_600SemiBold,
-    DMSerifDisplay_400Regular,
-    Outfit_400Regular,
-    Outfit_600SemiBold,
-    Outfit_700Bold,
+  const [fontsLoaded, fontsError] = useFonts({
+    PlusJakartaSans_400Regular,
+    PlusJakartaSans_500Medium,
+    PlusJakartaSans_700Bold,
   });
 
   useIsomorphicLayoutEffect(() => {
@@ -66,18 +59,24 @@ export default function RootLayout() {
     hasMounted.current = true;
   }, []);
 
-  if (!isColorSchemeLoaded || !fontsLoaded) {
+  useEffect(() => {
+    if (fontsLoaded && isColorSchemeLoaded && !fontsError) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, isColorSchemeLoaded, fontsError]);
+
+  if (!fontsLoaded && !isColorSchemeLoaded && !fontsError) {
     return null;
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={{ flex: 1 }} className={isDarkColorScheme ? 'dark' : ''}>
       <QueryClientProvider client={queryClient}>
         <ToastProvider>
           <AuthProvider>
             <ThemeProvider>
               <BottomSheetModalProvider>
-                <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+                <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
 
                 <Stack screenOptions={{ headerShown: false, gestureEnabled: false }}>
                   <Stack.Screen name="(protected)" />

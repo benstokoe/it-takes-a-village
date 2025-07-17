@@ -1,6 +1,6 @@
 import { Form, FormField, FormInput } from '@/components/ui/form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { UserPlus } from 'lucide-react-native';
+import { Plus, UserPlus } from 'lucide-react-native';
 import { useEffect } from 'react';
 import z from 'zod';
 import { Button } from '../button';
@@ -10,6 +10,7 @@ import { useInviteToGroup } from '@/hooks/group/useInviteToGroup';
 import { useForm } from 'react-hook-form';
 import { useSheetRef } from '../sheet';
 import { BottomSheet } from '../ui/bottom-sheet';
+import { useColorScheme } from '@/hooks/useColorScheme';
 
 type InviteMemberProps = {
   groupId: string;
@@ -23,6 +24,7 @@ const formSchema = z.object({
 export default function InviteMember({ groupId }: InviteMemberProps) {
   const { toast } = useToast();
   const { inviteToGroup } = useInviteToGroup();
+  const { isDarkColorScheme } = useColorScheme();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -65,9 +67,13 @@ export default function InviteMember({ groupId }: InviteMemberProps) {
 
   return (
     <>
-      <Button variant="outline" icon={UserPlus} onPress={() => bottomSheetRef.current?.present()}>
-        Invite Member
-      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        icon={Plus}
+        iconColor={isDarkColorScheme ? 'white' : 'black'}
+        onPress={() => bottomSheetRef.current?.present()}
+      />
 
       <BottomSheet ref={bottomSheetRef}>
         <Form {...form}>

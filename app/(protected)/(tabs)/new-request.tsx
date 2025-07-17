@@ -4,9 +4,16 @@ import { GroupsList } from '@/components/groups/groups-list';
 import { SafeAreaView } from '@/components/safe-area-view';
 import { Text } from '@/components/text';
 import { useGroup } from '@/hooks/group/useGroup';
-import { useGroups, UserGroup } from '@/hooks/group/useGroups';
+import { useGroups } from '@/hooks/group/useGroups';
+import { UserGroup } from '@/hooks/group/types';
 import { useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { useCallback, useState } from 'react';
+import { Button } from '@/components/button';
+import BackButton from '@/components/back-button';
+
+function Heading() {
+  return <Text variant="heading">New Request</Text>;
+}
 
 export default function NewRequest() {
   const { groupId } = useLocalSearchParams<{ groupId: string }>();
@@ -31,32 +38,32 @@ export default function NewRequest() {
 
   if (!selectedGroup) {
     return (
-      <SafeAreaView className="p-4 flex-col gap-4">
-        <Text variant="heading">New Request</Text>
+      <Container>
+        <Heading />
 
         <Text variant="body">Please select a group</Text>
 
         <GroupsList groups={groups} isLoading={isLoading} onGroupPress={handleGroupPress} />
-      </SafeAreaView>
+      </Container>
     );
   }
 
   if (isLoading) {
     return (
-      <SafeAreaView>
+      <Container>
         <Text variant="title">Loading...</Text>
-      </SafeAreaView>
+      </Container>
     );
   }
 
   return (
     <>
       <Container>
-        <Text variant="title">New Request</Text>
+        <Heading />
 
-        <Card>
-          <Text variant="body">{data?.[0].name}</Text>
-        </Card>
+        <BackButton onBackPress={() => setSelectedGroup('')} />
+
+        <Text variant="body">{data?.name}</Text>
       </Container>
     </>
   );

@@ -5,6 +5,9 @@ import { spacing } from '@/theme/globals';
 import { useState } from 'react';
 import { useToast, View } from '@/components/ui';
 import useCreateGroup from '@/hooks/group/useCreateGroup';
+import { useRouter } from 'expo-router';
+import { MediaPicker } from '../ui/media-picker';
+import { ImageIcon } from 'lucide-react-native';
 
 type CreateGroupFormProps = {
   onSuccess?: () => void;
@@ -12,9 +15,11 @@ type CreateGroupFormProps = {
 
 export function CreateGroupForm({ onSuccess }: CreateGroupFormProps) {
   const { createGroup, isCreatingGroup } = useCreateGroup();
+  const router = useRouter();
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [image, setImage] = useState<string | null>(null);
 
   const { toast } = useToast();
 
@@ -28,7 +33,12 @@ export function CreateGroupForm({ onSuccess }: CreateGroupFormProps) {
         variant: 'success',
       });
 
-      onSuccess?.();
+      router.push({
+        pathname: '/(protected)/(tabs)/group-details',
+        params: {
+          groupId: newGroup.id,
+        },
+      });
     }
   }
 
@@ -69,13 +79,25 @@ export function CreateGroupForm({ onSuccess }: CreateGroupFormProps) {
 
   return (
     <View style={{ display: 'flex', flexDirection: 'column', gap: spacing(4) }}>
+      <MediaPicker
+        mediaType="image"
+        showPreview={true}
+        previewSize={100}
+        buttonText="Add Media"
+        icon={ImageIcon}
+        // selectedAssets={assets}
+        onSelectionChange={(newAssets) => {
+          // setAssets(newAssets);
+          console.log('Assets with preview:', newAssets);
+        }}
+      />
+
       <Input
         placeholder="Group name (e.g., The Johnson Family)"
         value={name}
         onChangeText={setName}
         editable={!isCreatingGroup}
         maxLength={50}
-        variant="outline"
       />
 
       <Input
@@ -86,11 +108,10 @@ export function CreateGroupForm({ onSuccess }: CreateGroupFormProps) {
         rows={3}
         editable={!isCreatingGroup}
         maxLength={200}
-        variant="outline"
       />
 
       <Button onPress={handleSubmit} disabled={disabled} loading={isCreatingGroup}>
-        {isCreatingGroup ? 'Creating...' : 'Create Village'}
+        Create Group
       </Button>
     </View>
   );
