@@ -17,10 +17,12 @@ export default function GroupCard({ group, onPress }: GroupCardProps) {
       onPress={() => onPress(group)}
       activeOpacity={0.8}>
       <View className="flex-row items-center gap-4">
-        <View className="h-14 w-14 bg-secondary rounded-full" />
+        <View className="h-14 w-14 bg-primary rounded-full" />
 
         <View className="flex-col gap-1">
-          <Text weight="medium">{group.name}</Text>
+          <Text weight="medium" className="truncate">
+            {group.name}
+          </Text>
           <Text variant="caption" fontSize="small">
             {group.group_members.length} member{group.group_members.length > 1 ? 's' : ''}
           </Text>

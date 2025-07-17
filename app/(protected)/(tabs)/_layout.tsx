@@ -1,47 +1,74 @@
-import { Icon } from '@/components/ui';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { NewRequestTabButton } from '@/components/new-request-tab-button';
+import { Icon, View } from '@/components/ui';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { Tabs } from 'expo-router';
-import { Calendar, Home, Plus, Users } from 'lucide-react-native';
+import { Calendar, Home, Plus, User, Users } from 'lucide-react-native';
 
 export default function TabLayout() {
+  const primaryColor = useThemeColor({}, 'primary');
+  const cardColor = useThemeColor({}, 'card');
+
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
+        tabBarStyle: {
+          backgroundColor: cardColor,
+          borderTopWidth: 0,
+          paddingTop: 12,
+        },
+        tabBarShowLabel: false,
       }}>
       <Tabs.Screen
         name="index"
         options={{
           title: 'Dashboard',
-          tabBarIcon: ({ color }) => <Icon size={24} name={Home} color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <Icon size={24} name={Home} color={color} fill={focused ? color : 'none'} />
+          ),
         }}
       />
       <Tabs.Screen
         name="groups"
         options={{
           title: 'Groups',
-          tabBarIcon: ({ color }) => <Icon size={24} name={Users} color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <Icon size={24} name={Users} color={color} fill={focused ? color : 'none'} />
+          ),
         }}
       />
       <Tabs.Screen
         name="new-request"
         options={{
           title: 'New Request',
-          tabBarIcon: ({ color }) => <Icon size={24} name={Plus} color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <View
+              style={{
+                padding: 10,
+                backgroundColor: focused ? primaryColor : color,
+                borderRadius: 99,
+              }}>
+              <Icon size={24} name={Plus} color="white" fill={focused ? color : 'none'} />
+            </View>
+          ),
         }}
       />
       <Tabs.Screen
         name="requests"
         options={{
           title: 'Requests',
-          tabBarIcon: ({ color }) => <Icon size={24} name={Calendar} color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <Icon size={24} name={Calendar} color={color} fill={focused ? color : 'none'} />
+          ),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',
-          tabBarIcon: ({ color }) => <FontAwesome size={24} name="user" color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <Icon size={24} name={User} color={color} fill={focused ? color : 'none'} />
+          ),
         }}
       />
 

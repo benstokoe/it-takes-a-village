@@ -32,7 +32,7 @@
       [
         "expo-asset",
         {
-          "assets": ["./assets/images/welcome.svg"]
+          "assets": ["./assets/images/welcome.png"]
         }
       ]
     ],
@@ -54,7 +54,8 @@
       "bundleIdentifier": "com.benstokoe.ittakesavillage",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
-        "NSPhotoLibraryUsageDescription": "The app needs access to your photos to let you select group images."
+        "NSPhotoLibraryUsageDescription": "This app needs access to your photo library to let you select images for your profile and group creations",
+        "NSCameraUsageDescription": "This app needs camera access to take photos for your profile and requests"
       }
     },
     "android": {

@@ -1,12 +1,12 @@
+import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { View } from 'react-native';
-import { Image } from '@/components/ui/image';
-import { Asset } from 'expo-asset';
 
-import { Text } from '@/components/text';
 import { Button } from '@/components/button';
+import { Container } from '@/components/container';
+import { Text } from '@/components/text';
 import { useAuth } from '@/utils/useAuth';
-import { SafeAreaView } from '@/components/safe-area-view';
+import { BORDER_RADIUS } from '@/theme/globals';
 
 export default function WelcomeScreen() {
   const router = useRouter();
@@ -29,42 +29,45 @@ export default function WelcomeScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-background p-4" edges={['top', 'bottom']}>
-      <View className="flex-1 justify-center items-center gap-4">
-        {/* <Image source={{ uri: 'welcome' }} /> */}
+    <Container className="gap-10">
+      <Image
+        source={{ uri: 'welcome' }}
+        style={{ width: '100%', height: 320, borderRadius: BORDER_RADIUS }}
+      />
 
+      <View className="flex-1 items-center gap-4">
         <Text variant="heading" className="text-center text-5xl">
-          Welcome to It Takes A Village
+          Welcome to,
         </Text>
-        <Text variant="title" className="text-center">
+        <Text variant="heading" className="text-center text-5xl">
+          It Takes A Village
+        </Text>
+        <Text variant="subtitle" weight="medium" className="text-center">
           Easily book and manage your availability with your friends and family.
         </Text>
       </View>
 
       <View className="flex-col gap-4">
         <Button
-          size="default"
-          variant="default"
+          variant="secondary"
           onPress={() => {
             router.push('/sign-up');
           }}>
           Sign Up
         </Button>
         <Button
-          size="default"
-          variant="secondary"
           onPress={() => {
             router.push('/sign-in');
           }}>
           Sign In
         </Button>
-        <Button size="default" variant="default" onPress={loginWithBetsy}>
+        <Button variant="link" onPress={loginWithBetsy}>
           Login with Betsy
         </Button>
-        <Button size="default" variant="default" onPress={loginWithElody}>
+        <Button variant="link" onPress={loginWithElody}>
           Login with Elody
         </Button>
       </View>
-    </SafeAreaView>
+    </Container>
   );
 }

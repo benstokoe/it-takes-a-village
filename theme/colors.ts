@@ -12,12 +12,12 @@ const lightColors = {
   popoverForeground: '#000000',
 
   // Primary colors
-  primary: '#18181b',
-  primaryForeground: '#FFFFFF',
+  primary: '#E5CCB2',
+  primaryForeground: '#18181b',
 
   // Secondary colors
-  secondary: '#E5CCB2',
-  secondaryForeground: '#18181b',
+  secondary: '#36302B',
+  secondaryForeground: '#FFFFFF',
 
   // Muted colors
   muted: '#78788033',
@@ -38,7 +38,7 @@ const lightColors = {
 
   // Text colors
   text: '#000000',
-  textMuted: '#71717a',
+  textMuted: '#82756B',
 
   // Legacy support for existing components
   tint: '#18181b',
@@ -88,12 +88,12 @@ const darkColors = {
   popoverForeground: '#FFFFFF',
 
   // Primary colors
-  primary: '#e5801a',
-  primaryForeground: '#171412',
+  primary: '#E5CCB2',
+  primaryForeground: '#18181b',
 
   // Secondary colors
-  secondary: '#E5CCB2',
-  secondaryForeground: '#171412',
+  secondary: '#36302B',
+  secondaryForeground: '#FFFFFF',
 
   // Muted colors
   muted: '#78788033',
@@ -114,7 +114,7 @@ const darkColors = {
 
   // Text colors
   text: '#FFFFFF',
-  textMuted: '#a1a1aa',
+  textMuted: '#B8AB9E',
 
   // Legacy support for existing components
   tint: '#FFFFFF',

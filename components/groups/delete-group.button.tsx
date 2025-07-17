@@ -38,7 +38,6 @@ export default function DeleteGroupButton({ groupId, onSuccess }: DeleteGroupBut
 
   return (
     <Button
-      variant="secondary"
       className="flex-1 rounded-full w-auto"
       loading={isDeletingGroup}
       onPress={() =>
