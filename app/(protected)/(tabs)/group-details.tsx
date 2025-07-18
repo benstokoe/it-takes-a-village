@@ -108,6 +108,7 @@ export default function GroupDetails() {
             </View>
 
             <View className="flex-row justify-end gap-2">
+              <Button variant="secondary">Edit</Button>
               <DeleteGroupButton groupId={group.id} />
             </View>
           </View>

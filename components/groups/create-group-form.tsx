@@ -1,13 +1,13 @@
+import { Text } from '@/components/text';
+import { useToast, View } from '@/components/ui';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Text } from '@/components/ui/text';
-import { spacing } from '@/theme/globals';
-import { useState } from 'react';
-import { useToast, View } from '@/components/ui';
+import { MediaAsset, MediaPicker } from '@/components/ui/media-picker';
 import useCreateGroup from '@/hooks/group/useCreateGroup';
+import { spacing } from '@/theme/globals';
 import { useRouter } from 'expo-router';
-import { MediaPicker } from '../ui/media-picker';
 import { ImageIcon } from 'lucide-react-native';
+import { useState } from 'react';
 
 type CreateGroupFormProps = {
   onSuccess?: () => void;
@@ -19,7 +19,7 @@ export function CreateGroupForm({ onSuccess }: CreateGroupFormProps) {
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [image, setImage] = useState<string | null>(null);
+  const [assets, setAssets] = useState<MediaAsset[]>([]);
 
   const { toast } = useToast();
 
@@ -81,14 +81,18 @@ export function CreateGroupForm({ onSuccess }: CreateGroupFormProps) {
     <View style={{ display: 'flex', flexDirection: 'column', gap: spacing(4) }}>
       <MediaPicker
         mediaType="image"
-        showPreview={true}
-        previewSize={100}
-        buttonText="Add Media"
+        showPreview
+        previewSize={128}
+        buttonText="Add group cover photo"
         icon={ImageIcon}
-        // selectedAssets={assets}
+        selectedAssets={assets}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 16,
+        }}
         onSelectionChange={(newAssets) => {
-          // setAssets(newAssets);
-          console.log('Assets with preview:', newAssets);
+          setAssets(newAssets);
         }}
       />
 

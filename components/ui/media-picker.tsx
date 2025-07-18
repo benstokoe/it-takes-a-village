@@ -61,9 +61,7 @@ const arraysEqual = (a: MediaAsset[], b: MediaAsset[]): boolean => {
   if (a.length !== b.length) return false;
   return a.every((item, index) => {
     const bItem = b[index];
-    return (
-      item.id === bItem.id && item.uri === bItem.uri && item.type === bItem.type
-    );
+    return item.id === bItem.id && item.uri === bItem.uri && item.type === bItem.type;
   });
 };
 
@@ -92,9 +90,7 @@ export const MediaPicker = forwardRef<RNView, MediaPickerProps>(
   ) => {
     const [assets, setAssets] = useState<MediaAsset[]>(selectedAssets);
     const [isGalleryVisible, setIsGalleryVisible] = useState(false);
-    const [galleryAssets, setGalleryAssets] = useState<MediaLibrary.Asset[]>(
-      []
-    );
+    const [galleryAssets, setGalleryAssets] = useState<MediaLibrary.Asset[]>([]);
     const [hasPermission, setHasPermission] = useState<boolean | null>(null);
 
     // Use ref to track previous selectedAssets to avoid unnecessary updates
@@ -103,7 +99,6 @@ export const MediaPicker = forwardRef<RNView, MediaPickerProps>(
     // Theme colors
     const cardColor = useThemeColor({}, 'card');
     const borderColor = useThemeColor({}, 'border');
-    const textColor = useThemeColor({}, 'text');
     const mutedColor = useThemeColor({}, 'mutedForeground');
     const primaryColor = useThemeColor({}, 'primary');
     const secondary = useThemeColor({}, 'secondary');
@@ -128,11 +123,9 @@ export const MediaPicker = forwardRef<RNView, MediaPickerProps>(
         setHasPermission(status === 'granted');
 
         if (status !== 'granted') {
-          onError?.(
-            'Media library permission is required to access photos and videos'
-          );
+          onError?.('Media library permission is required to access photos and videos');
         }
-      } catch (error) {
+      } catch {
         onError?.('Failed to request permissions');
         setHasPermission(false);
       }
@@ -146,8 +139,8 @@ export const MediaPicker = forwardRef<RNView, MediaPickerProps>(
           mediaType === 'image'
             ? [MediaLibrary.MediaType.photo]
             : mediaType === 'video'
-            ? [MediaLibrary.MediaType.video]
-            : [MediaLibrary.MediaType.photo, MediaLibrary.MediaType.video];
+              ? [MediaLibrary.MediaType.video]
+              : [MediaLibrary.MediaType.photo, MediaLibrary.MediaType.video];
 
         const { assets: galleryAssets } = await MediaLibrary.getAssetsAsync({
           first: 100,
@@ -156,7 +149,7 @@ export const MediaPicker = forwardRef<RNView, MediaPickerProps>(
         });
 
         setGalleryAssets(galleryAssets);
-      } catch (error) {
+      } catch {
         onError?.('Failed to load gallery assets');
       }
     };
@@ -179,8 +172,8 @@ export const MediaPicker = forwardRef<RNView, MediaPickerProps>(
             mediaType === 'image'
               ? ImagePicker.MediaTypeOptions.Images
               : mediaType === 'video'
-              ? ImagePicker.MediaTypeOptions.Videos
-              : ImagePicker.MediaTypeOptions.All,
+                ? ImagePicker.MediaTypeOptions.Videos
+                : ImagePicker.MediaTypeOptions.All,
           allowsMultipleSelection: multiple,
           quality: quality === 'high' ? 1 : quality === 'medium' ? 0.7 : 0.3,
           selectionLimit: multiple ? maxSelection : 1,
@@ -190,8 +183,7 @@ export const MediaPicker = forwardRef<RNView, MediaPickerProps>(
           const newAssets = result.assets.map((asset, index) => ({
             id: `gallery_${Date.now()}_${index}`,
             uri: asset.uri,
-            type:
-              asset.type === 'video' ? ('video' as const) : ('image' as const),
+            type: asset.type === 'video' ? ('video' as const) : ('image' as const),
             width: asset.width,
             height: asset.height,
             duration: asset.duration || undefined,
@@ -201,7 +193,7 @@ export const MediaPicker = forwardRef<RNView, MediaPickerProps>(
 
           handleAssetSelection(newAssets);
         }
-      } catch (error) {
+      } catch {
         onError?.('Failed to pick media from gallery');
       }
     };
@@ -220,19 +212,14 @@ export const MediaPicker = forwardRef<RNView, MediaPickerProps>(
       onSelectionChange?.(updatedAssets);
     };
 
-    const handleGalleryAssetSelect = async (
-      galleryAsset: MediaLibrary.Asset
-    ) => {
+    const handleGalleryAssetSelect = async (galleryAsset: MediaLibrary.Asset) => {
       try {
         const assetInfo = await MediaLibrary.getAssetInfoAsync(galleryAsset);
 
         const newAsset: MediaAsset = {
           id: galleryAsset.id,
           uri: assetInfo.localUri || galleryAsset.uri,
-          type:
-            galleryAsset.mediaType === MediaLibrary.MediaType.video
-              ? 'video'
-              : 'image',
+          type: galleryAsset.mediaType === MediaLibrary.MediaType.video ? 'video' : 'image',
           width: galleryAsset.width,
           height: galleryAsset.height,
           duration: galleryAsset.duration || undefined,
@@ -240,13 +227,9 @@ export const MediaPicker = forwardRef<RNView, MediaPickerProps>(
         };
 
         if (multiple) {
-          const isAlreadySelected = assets.some(
-            (asset) => asset.id === newAsset.id
-          );
+          const isAlreadySelected = assets.some((asset) => asset.id === newAsset.id);
           if (isAlreadySelected) {
-            const filteredAssets = assets.filter(
-              (asset) => asset.id !== newAsset.id
-            );
+            const filteredAssets = assets.filter((asset) => asset.id !== newAsset.id);
             setAssets(filteredAssets);
             prevSelectedAssetsRef.current = filteredAssets; // Update ref
             onSelectionChange?.(filteredAssets);
@@ -263,7 +246,7 @@ export const MediaPicker = forwardRef<RNView, MediaPickerProps>(
           onSelectionChange?.(newAssets);
           setIsGalleryVisible(false);
         }
-      } catch (error) {
+      } catch {
         onError?.('Failed to select asset');
       }
     };
@@ -276,24 +259,23 @@ export const MediaPicker = forwardRef<RNView, MediaPickerProps>(
     };
 
     const renderPreviewItem = ({ item }: { item: MediaAsset }) => (
-      <View style={[styles.previewItem, { borderColor }]}>
-        <ExpoImage
-          source={{ uri: item.uri }}
-          style={[
-            styles.previewImage,
-            { width: previewSize, height: previewSize },
-          ]}
-          contentFit='cover'
-        />
-        {item.type === 'video' && (
-          <View style={styles.videoIndicator}>
-            <Video size={16} color='white' />
-          </View>
-        )}
+      <View style={styles.previewItemContainer}>
+        <View style={[styles.previewItem, { borderColor }]}>
+          <ExpoImage
+            source={{ uri: item.uri }}
+            style={[styles.previewImage, { width: previewSize, height: previewSize }]}
+            contentFit="cover"
+          />
+          {item.type === 'video' && (
+            <View style={styles.videoIndicator}>
+              <Video size={16} color="white" />
+            </View>
+          )}
+        </View>
+
         <TouchableOpacity
           style={[styles.removeButton, { backgroundColor: primaryColor }]}
-          onPress={() => removeAsset(item.id)}
-        >
+          onPress={() => removeAsset(item.id)}>
           <X size={12} color={secondary} />
         </TouchableOpacity>
       </View>
@@ -310,32 +292,21 @@ export const MediaPicker = forwardRef<RNView, MediaPickerProps>(
             { width: itemWidth, height: itemWidth },
             isSelected && { borderColor: primaryColor, borderWidth: 3 },
           ]}
-          onPress={() => handleGalleryAssetSelect(item)}
-        >
-          <ExpoImage
-            source={{ uri: item.uri }}
-            style={styles.galleryImage}
-            contentFit='cover'
-          />
+          onPress={() => handleGalleryAssetSelect(item)}>
+          <ExpoImage source={{ uri: item.uri }} style={styles.galleryImage} contentFit="cover" />
           {item.mediaType === MediaLibrary.MediaType.video && (
             <View style={styles.videoIndicator}>
-              <Video size={20} color='white' />
+              <Video size={20} color="white" />
             </View>
           )}
           {multiple && isSelected && (
-            <View
-              style={[
-                styles.selectedIndicator,
-                { backgroundColor: primaryColor },
-              ]}
-            >
+            <View style={[styles.selectedIndicator, { backgroundColor: primaryColor }]}>
               <Text
                 style={{
                   color: secondary,
                   fontSize: 12,
                   fontWeight: 'bold',
-                }}
-              >
+                }}>
                 {assets.findIndex((asset) => asset.id === item.id) + 1}
               </Text>
             </View>
@@ -346,28 +317,26 @@ export const MediaPicker = forwardRef<RNView, MediaPickerProps>(
 
     return (
       <View ref={ref} style={style}>
+        {assets.length === 1 && renderPreviewItem({ item: assets[0] })}
+
+        {showPreview && !assets.length && (
+          <View
+            style={{ height: 128, width: 128, backgroundColor: cardColor, borderRadius: 999 }}
+          />
+        )}
+
         {children ? (
           children
         ) : (
-          <Button
-            onPress={pickFromGallery}
-            disabled={disabled}
-            variant={variant}
-            size={size}
-            icon={icon}
-          >
+          <Button onPress={pickFromGallery} disabled={disabled} variant={variant} size={size}>
             {buttonText ||
               `Select ${
-                mediaType === 'all'
-                  ? 'Media'
-                  : mediaType === 'image'
-                  ? 'Images'
-                  : 'Videos'
+                mediaType === 'all' ? 'Media' : mediaType === 'image' ? 'Images' : 'Videos'
               }`}
           </Button>
         )}
 
-        {showPreview && assets.length > 0 && (
+        {showPreview && assets.length > 1 && (
           <FlatList
             data={assets}
             renderItem={renderPreviewItem}
@@ -380,41 +349,23 @@ export const MediaPicker = forwardRef<RNView, MediaPickerProps>(
         )}
 
         {gallery && (
-          <Modal
-            visible={isGalleryVisible}
-            animationType='slide'
-            presentationStyle='pageSheet'
-          >
-            <View
-              style={[styles.modalContainer, { backgroundColor: cardColor }]}
-            >
-              <View
-                style={[styles.modalHeader, { borderBottomColor: borderColor }]}
-              >
-                <Text variant='title'>
+          <Modal visible={isGalleryVisible} animationType="slide" presentationStyle="pageSheet">
+            <View style={[styles.modalContainer, { backgroundColor: cardColor }]}>
+              <View style={[styles.modalHeader, { borderBottomColor: borderColor }]}>
+                <Text variant="title">
                   {buttonText ||
                     `Select ${
-                      mediaType === 'all'
-                        ? 'Media'
-                        : mediaType === 'image'
-                        ? 'Images'
-                        : 'Videos'
+                      mediaType === 'all' ? 'Media' : mediaType === 'image' ? 'Images' : 'Videos'
                     }`}
                 </Text>
                 <View style={styles.modalActions}>
                   {multiple && (
-                    <Text
-                      style={[styles.selectionCount, { color: mutedColor }]}
-                    >
+                    <Text style={[styles.selectionCount, { color: mutedColor }]}>
                       {assets.length}/{maxSelection}
                     </Text>
                   )}
 
-                  <Button
-                    size='sm'
-                    variant='success'
-                    onPress={() => setIsGalleryVisible(false)}
-                  >
+                  <Button size="sm" variant="success" onPress={() => setIsGalleryVisible(false)}>
                     Done
                   </Button>
                 </View>
@@ -458,16 +409,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
   },
 
+  previewItemContainer: {
+    position: 'relative',
+    width: 128,
+    height: 128,
+  },
+
   previewItem: {
-    marginHorizontal: 4,
-    borderRadius: 8,
-    borderWidth: 1,
+    borderRadius: 999,
     overflow: 'hidden',
     position: 'relative',
   },
 
   previewImage: {
-    borderRadius: 8,
+    borderRadius: 999,
   },
 
   videoIndicator: {

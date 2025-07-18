@@ -9,12 +9,12 @@ export type Props = LucideProps & {
 };
 
 export function Icon({
-  lightColor,
-  darkColor,
+  lightColor = 'black',
+  darkColor = 'white',
   name: IconComponent,
   color,
   size = 24,
-  strokeWidth = 1.8,
+  strokeWidth = 2.5,
   ...rest
 }: Props) {
   const themedColor = useThemeColor({ light: lightColor, dark: darkColor }, 'icon');

@@ -32,11 +32,13 @@ export default function Groups() {
       </View>
 
       <ScrollView>
-        {groups.length > 0 ? (
-          <GroupsList groups={groups} isLoading={isLoading} />
-        ) : (
-          <Text variant="body">No groups found</Text>
-        )}
+        <View className="pb-4">
+          {groups.length > 0 ? (
+            <GroupsList groups={groups} isLoading={isLoading} />
+          ) : (
+            <Text variant="body">No groups found</Text>
+          )}
+        </View>
       </ScrollView>
     </Container>
   );

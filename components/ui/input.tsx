@@ -159,12 +159,7 @@ export const Input = forwardRef<TextInput, InputProps>(
                         variant="caption"
                         numberOfLines={1}
                         ellipsizeMode="tail"
-                        style={[
-                          {
-                            color: error ? danger : muted,
-                          },
-                          labelStyle,
-                        ]}
+                        style={[{ color: error ? danger : muted }, labelStyle]}
                         pointerEvents="none">
                         {label}
                       </Text>

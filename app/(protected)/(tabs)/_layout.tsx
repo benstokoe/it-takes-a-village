@@ -1,4 +1,3 @@
-import { NewRequestTabButton } from '@/components/new-request-tab-button';
 import { Icon, View } from '@/components/ui';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { Tabs } from 'expo-router';
@@ -48,7 +47,7 @@ export default function TabLayout() {
                 backgroundColor: focused ? primaryColor : color,
                 borderRadius: 99,
               }}>
-              <Icon size={24} name={Plus} color="white" fill={focused ? color : 'none'} />
+              <Icon size={24} name={Plus} color={focused ? 'black' : 'white'} />
             </View>
           ),
         }}

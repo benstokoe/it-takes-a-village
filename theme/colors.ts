@@ -28,7 +28,7 @@ const lightColors = {
   accentForeground: '#18181b',
 
   // Destructive colors
-  destructive: '#ef4444',
+  destructive: '#E51A1A',
   destructiveForeground: '#FFFFFF',
 
   // Border and input
