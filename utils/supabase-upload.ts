@@ -5,7 +5,7 @@ import * as FileSystem from 'expo-file-system';
 export interface MediaAsset {
   id: string;
   uri: string;
-  type: 'image';
+  type: 'image' | 'video';
 }
 
 export async function uploadImageToSupabase(image: MediaAsset, groupName: string): Promise<string> {
