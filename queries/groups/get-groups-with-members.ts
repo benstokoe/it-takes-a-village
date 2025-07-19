@@ -24,5 +24,6 @@ export default async function getGroupsWithMembers(client: SupabaseClient, group
     `
     )
     .in('id', groupIds)
-    .eq('group_members.is_active', true);
+    .eq('group_members.is_active', true)
+    .order('created_at', { ascending: false });
 }
