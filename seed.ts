@@ -14,7 +14,7 @@ const main = async () => {
     models: {
       profiles: {
         data: {
-          avatarUrl: ({ seed }) => faker.image.avatarGitHub(),
+          avatarUrl: () => faker.image.urlLoremFlickr({ category: 'people' }),
         },
       },
     },
@@ -59,7 +59,7 @@ const main = async () => {
   const PASSWORD = 'testuser';
   for (let i = 0; i < 5; i++) {
     const email = copycat.email(i).toLowerCase();
-    const avatar = faker.image.avatarGitHub();
+    const avatar = faker.image.urlLoremFlickr({ category: 'people' });
     const fullName = copycat.fullName(i);
     const userName = copycat.username(i);
 
@@ -92,6 +92,16 @@ const main = async () => {
   await seed.groups((x) => x(10), { connect: { profiles } });
   await seed.requestMessages((x) => x(10), { connect: { profiles } });
   await seed.requestRecipients((x) => x(10), { connect: { profiles } });
+
+  // Update groups with cover images
+  const { data: groups } = await supabase.from('groups').select('id');
+  if (groups) {
+    for (const group of groups) {
+      const coverImageUrl = faker.image.urlLoremFlickr({ category: 'people' });
+
+      await supabase.from('groups').update({ cover_image_url: coverImageUrl }).eq('id', group.id);
+    }
+  }
 
   process.exit();
 };

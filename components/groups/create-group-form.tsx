@@ -1,13 +1,27 @@
-import { Text } from '@/components/text';
 import { useToast, View } from '@/components/ui';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Form, FormField, FormInput, FormMessage, FormTextarea } from '@/components/ui/form';
 import { MediaAsset, MediaPicker } from '@/components/ui/media-picker';
 import useCreateGroup from '@/hooks/group/useCreateGroup';
 import { spacing } from '@/theme/globals';
+import { uploadImageToSupabase } from '@/utils/supabase-upload';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'expo-router';
 import { ImageIcon } from 'lucide-react-native';
-import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { z } from 'zod';
+
+// Zod schema for form validation
+const createGroupSchema = z.object({
+  coverImage: z.array(z.custom<MediaAsset>()).max(1, 'Only one cover image is allowed'),
+  name: z
+    .string()
+    .min(2, 'Group name must be at least 2 characters')
+    .max(50, 'Group name must be less than 50 characters'),
+  description: z.string().max(200, 'Description must be less than 200 characters').optional(),
+});
+
+type CreateGroupFormData = z.infer<typeof createGroupSchema>;
 
 type CreateGroupFormProps = {
   onSuccess?: () => void;
@@ -16,57 +30,49 @@ type CreateGroupFormProps = {
 export function CreateGroupForm({ onSuccess }: CreateGroupFormProps) {
   const { createGroup, isCreatingGroup } = useCreateGroup();
   const router = useRouter();
-
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [assets, setAssets] = useState<MediaAsset[]>([]);
-
   const { toast } = useToast();
 
-  async function handleCreateGroup(name: string, description?: string) {
-    const newGroup = await createGroup({ name, description });
+  const form = useForm<CreateGroupFormData>({
+    resolver: zodResolver(createGroupSchema),
+    defaultValues: {
+      name: '',
+      description: '',
+      coverImage: [],
+    },
+    mode: 'onBlur',
+  });
 
-    if (newGroup) {
+  const handleSubmit = async (data: CreateGroupFormData) => {
+    try {
+      const coverImageUrl = await uploadImageToSupabase(data.coverImage[0], data.name);
+
+      const newGroup = await createGroup({
+        name: data.name,
+        description: data.description || undefined,
+        coverImageUrl,
+      });
+
+      if (!newGroup || !newGroup.id) {
+        throw new Error('Failed to create group or group ID is missing');
+      }
+
       toast({
         title: 'Success',
-        description: `${name} has been created!`,
-        variant: 'success',
+        description: `${data.name} has been created!`,
       });
 
-      router.push({
+      form.reset();
+
+      router.replace({
         pathname: '/(protected)/(tabs)/group-details',
         params: {
-          groupId: newGroup.id,
+          groupId: newGroup.id.toString(),
         },
       });
-    }
-  }
 
-  const handleSubmit = async () => {
-    if (!name.trim()) {
-      toast({
-        title: 'Validation Error',
-        description: 'Group name is required',
-        variant: 'error',
-      });
-      return;
-    }
-
-    if (name.trim().length < 2) {
-      toast({
-        title: 'Validation Error',
-        description: 'Group name must be at least 2 characters long',
-        variant: 'error',
-      });
-      return;
-    }
-
-    try {
-      await handleCreateGroup(name.trim(), description.trim() || undefined);
-      setName('');
-      setDescription('');
+      onSuccess?.();
     } catch (error) {
-      console.error(error);
+      console.error('Error creating group:', error);
       toast({
         title: 'Error',
         description: 'Failed to create group. Please try again.',
@@ -75,48 +81,82 @@ export function CreateGroupForm({ onSuccess }: CreateGroupFormProps) {
     }
   };
 
-  const disabled = isCreatingGroup || !name.trim();
+  const isLoading = isCreatingGroup || form.formState.isSubmitting;
 
   return (
-    <View style={{ display: 'flex', flexDirection: 'column', gap: spacing(4) }}>
-      <MediaPicker
-        mediaType="image"
-        showPreview
-        previewSize={128}
-        buttonText="Add group cover photo"
-        icon={ImageIcon}
-        selectedAssets={assets}
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: 16,
-        }}
-        onSelectionChange={(newAssets) => {
-          setAssets(newAssets);
-        }}
-      />
+    <Form {...form}>
+      <View style={{ display: 'flex', flexDirection: 'column', gap: spacing(4) }}>
+        <FormField
+          control={form.control}
+          name="coverImage"
+          render={({ field }) => (
+            <>
+              <Controller
+                control={form.control}
+                name="coverImage"
+                render={({ field: { onChange, value } }) => (
+                  <MediaPicker
+                    mediaType="image"
+                    showPreview
+                    previewSize={128}
+                    buttonText="Add group cover photo"
+                    icon={ImageIcon}
+                    selectedAssets={value || []}
+                    maxSelection={1}
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: 16,
+                    }}
+                    onSelectionChange={onChange}
+                    disabled={isLoading}
+                  />
+                )}
+              />
+              <FormMessage />
+            </>
+          )}
+        />
 
-      <Input
-        placeholder="Group name (e.g., The Johnson Family)"
-        value={name}
-        onChangeText={setName}
-        editable={!isCreatingGroup}
-        maxLength={50}
-      />
+        {/* Name Field */}
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <>
+              <FormInput
+                {...field}
+                placeholder="Group name (e.g., The Johnson Family)"
+                editable={!isLoading}
+                maxLength={50}
+              />
+              <FormMessage />
+            </>
+          )}
+        />
 
-      <Input
-        placeholder="Description (optional)"
-        value={description}
-        onChangeText={setDescription}
-        type="textarea"
-        rows={3}
-        editable={!isCreatingGroup}
-        maxLength={200}
-      />
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <>
+              <FormTextarea
+                {...field}
+                placeholder="Description (optional)"
+                value={field.value || ''}
+                rows={3}
+                editable={!isLoading}
+                maxLength={200}
+              />
+              <FormMessage />
+            </>
+          )}
+        />
 
-      <Button onPress={handleSubmit} disabled={disabled} loading={isCreatingGroup}>
-        Create Group
-      </Button>
-    </View>
+        <Button onPress={form.handleSubmit(handleSubmit)} disabled={isLoading} loading={isLoading}>
+          Create Group
+        </Button>
+      </View>
+    </Form>
   );
 }

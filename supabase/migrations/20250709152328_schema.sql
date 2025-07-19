@@ -164,7 +164,8 @@ CREATE TABLE IF NOT EXISTS "public"."groups" (
     "invite_code" "text" NOT NULL,
     "created_by" "uuid" NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"(),
-    "updated_at" timestamp with time zone DEFAULT "now"()
+    "updated_at" timestamp with time zone DEFAULT "now"(),
+    "cover_image_url" "text"
 );
 
 ALTER TABLE "public"."groups" OWNER TO "postgres";

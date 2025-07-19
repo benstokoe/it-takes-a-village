@@ -8,7 +8,7 @@ type ContainerProps = {
   edges?: Edge[];
 };
 
-export const Container = ({ children, className, edges = ['top'] }: ContainerProps) => {
+export const Container = ({ children, className, edges = ['top', 'bottom'] }: ContainerProps) => {
   return (
     <SafeAreaView className={cn('flex-1 p-4 pb-0 flex-col gap-4', className)} edges={edges}>
       {children}

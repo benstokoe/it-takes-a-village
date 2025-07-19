@@ -3,11 +3,11 @@ import { useForm } from 'react-hook-form';
 import { ActivityIndicator, View } from 'react-native';
 import * as z from 'zod';
 
+import { Container } from '@/components/container';
 import { Button } from '@/components/ui/button';
 import { Form, FormField, FormInput } from '@/components/ui/form';
 import { Text } from '@/components/ui/text';
 import { useAuth } from '@/utils/useAuth';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 const formSchema = z
   .object({
@@ -50,7 +50,7 @@ export default function SignUp() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-background p-4" edges={['top', 'bottom']}>
+    <Container>
       <View className="flex-1 gap-4 web:m-4">
         <Form {...form}>
           <View className="gap-4">
@@ -108,6 +108,6 @@ export default function SignUp() {
         className="web:m-4">
         {form.formState.isSubmitting ? <ActivityIndicator size="small" /> : <Text>Sign Up</Text>}
       </Button>
-    </SafeAreaView>
+    </Container>
   );
 }

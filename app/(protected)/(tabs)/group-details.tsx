@@ -8,7 +8,9 @@ import { Text } from '@/components/text';
 import { Spinner } from '@/components/ui';
 import { useGroup } from '@/hooks/group/useGroup';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { BORDER_RADIUS_FULL } from '@/theme/globals';
 import { useAuth } from '@/utils/useAuth';
+import { Image } from 'expo-image';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Plus } from 'lucide-react-native';
 import { ScrollView, View } from 'react-native';
@@ -48,6 +50,8 @@ export default function GroupDetails() {
       </Container>
     );
   }
+  console.log('Group data:', group);
+  console.log('Cover image URL:', group.cover_image_url);
 
   return (
     <>
@@ -72,7 +76,15 @@ export default function GroupDetails() {
         <ScrollView showsVerticalScrollIndicator={false}>
           <View className="flex-col gap-5">
             <View className="justify-center items-center gap-4">
-              <View className="h-[128px] w-[128px] bg-secondary rounded-full" />
+              <Image
+                source={{ uri: group.cover_image_url }}
+                style={{
+                  width: 128,
+                  height: 128,
+                  borderRadius: BORDER_RADIUS_FULL,
+                }}
+                contentFit="cover"
+              />
 
               <View className="gap-1">
                 <Text variant="title" className="text-center">

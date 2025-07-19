@@ -1,0 +1,13 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# Technical stack
+
+- use bun for dependencies
+- Astro for the frontend
+- Vitest and react testing library for testing
+- Tailwind CSS v4
+- Uses drizzleorm and mysql found in `src/db/auth`

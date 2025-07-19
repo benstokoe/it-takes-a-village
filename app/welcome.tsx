@@ -5,34 +5,16 @@ import { View } from 'react-native';
 import { Button } from '@/components/button';
 import { Container } from '@/components/container';
 import { Text } from '@/components/text';
-import { useAuth } from '@/utils/useAuth';
-import { BORDER_RADIUS } from '@/theme/globals';
+import { BORDER_RADIUS_FULL } from '@/theme/globals';
 
 export default function WelcomeScreen() {
   const router = useRouter();
-  const { signIn } = useAuth();
-
-  async function loginWithBetsy() {
-    try {
-      await signIn({ email: 'pete.kassulke82520@fox-min.com', password: 'testuser' });
-    } catch (error: Error | any) {
-      console.error(error.message);
-    }
-  }
-
-  async function loginWithElody() {
-    try {
-      await signIn({ email: 'filiberto_walker71127@bleakcricket.org', password: 'testuser' });
-    } catch (error: Error | any) {
-      console.error(error.message);
-    }
-  }
 
   return (
     <Container className="gap-10">
       <Image
         source={{ uri: 'welcome' }}
-        style={{ width: '100%', height: 320, borderRadius: BORDER_RADIUS }}
+        style={{ width: '100%', height: 320, borderRadius: BORDER_RADIUS_FULL }}
       />
 
       <View className="flex-1 items-center gap-4">
@@ -60,12 +42,6 @@ export default function WelcomeScreen() {
             router.push('/sign-in');
           }}>
           Sign In
-        </Button>
-        <Button variant="link" onPress={loginWithBetsy}>
-          Login with Betsy
-        </Button>
-        <Button variant="link" onPress={loginWithElody}>
-          Login with Elody
         </Button>
       </View>
     </Container>

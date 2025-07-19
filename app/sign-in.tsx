@@ -3,10 +3,10 @@ import { useForm } from 'react-hook-form';
 import { ActivityIndicator, View } from 'react-native';
 import * as z from 'zod';
 
+import { Container } from '@/components/container';
 import { Button } from '@/components/ui/button';
 import { Form, FormField, FormInput } from '@/components/ui/form';
 import { useAuth } from '@/utils/useAuth';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 const formSchema = z.object({
   email: z.email('Please enter a valid email address.'),
@@ -37,18 +37,24 @@ export default function SignIn() {
     }
   }
 
-  async function loginWithPete() {
+  async function loginWithBetsy() {
     try {
       await signIn({ email: 'pete.kassulke82520@fox-min.com', password: 'testuser' });
+    } catch (error: Error | any) {
+      console.error(error.message);
+    }
+  }
 
-      form.reset();
+  async function loginWithElody() {
+    try {
+      await signIn({ email: 'filiberto_walker71127@bleakcricket.org', password: 'testuser' });
     } catch (error: Error | any) {
       console.error(error.message);
     }
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-background p-4" edges={['top', 'bottom']}>
+    <Container>
       <View className="web:m-4 flex-1 gap-4">
         <Form {...form}>
           <View className="gap-4">
@@ -95,15 +101,13 @@ export default function SignIn() {
           {form.formState.isSubmitting ? <ActivityIndicator size="small" /> : 'Sign In'}
         </Button>
 
-        <Button
-          size="default"
-          variant="default"
-          onPress={loginWithPete}
-          disabled={form.formState.isSubmitting}
-          className="web:m-4">
-          Login with Pete
+        <Button variant="link" onPress={loginWithBetsy}>
+          Login with Betsy
+        </Button>
+        <Button variant="link" onPress={loginWithElody}>
+          Login with Elody
         </Button>
       </View>
-    </SafeAreaView>
+    </Container>
   );
 }

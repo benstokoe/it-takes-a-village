@@ -10,10 +10,10 @@ export default function useCreateGroup() {
   const userId = session?.user?.id;
 
   const createGroupMutation = useMutation({
-    mutationFn: async ({ name, description }: { name: string; description?: string }) => {
+    mutationFn: async ({ name, description, coverImageUrl }: { name: string; description?: string; coverImageUrl?: string }) => {
       if (!userId) throw new Error('User must be authenticated');
 
-      const { data } = await createGroupQuery(supabase, userId, name, description);
+      const { data } = await createGroupQuery(supabase, userId, name, description, coverImageUrl);
       return data;
     },
     onSuccess: () => {

@@ -3,6 +3,7 @@ import { Text } from '@/components/text';
 import { Avatar } from '@/components/avatar';
 import { UserGroup } from '@/hooks/group/types';
 import { AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Image } from 'expo-image';
 
 type GroupCardProps = {
   group: UserGroup;
@@ -17,7 +18,15 @@ export default function GroupCard({ group, onPress }: GroupCardProps) {
       onPress={() => onPress(group)}
       activeOpacity={0.8}>
       <View className="flex-row items-center gap-4">
-        <View className="h-14 w-14 bg-primary rounded-full" />
+        <Image
+          source={{ uri: group.cover_image_url }}
+          style={{
+            width: 56,
+            height: 56,
+            borderRadius: 28,
+          }}
+          contentFit="cover"
+        />
 
         <View className="flex-col gap-1">
           <Text weight="medium" className="truncate">
