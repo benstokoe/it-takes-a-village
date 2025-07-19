@@ -50,8 +50,6 @@ export default function GroupDetails() {
       </Container>
     );
   }
-  console.log('Group data:', group);
-  console.log('Cover image URL:', group.cover_image_url);
 
   return (
     <>
